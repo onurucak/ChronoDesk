@@ -70,24 +70,17 @@
 
             <!-- Danger Zone -->
             <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource CardStyle}" Padding="30" Margin="0,30,0,0" BorderBrush="{StaticResource DangerBrush}" BorderThickness="1">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="Auto"/>
-                    </Grid.ColumnDefinitions>
-                    
-                    <StackPanel>
-                         <TextBlock Text="Danger Zone" FontWeight="SemiBold" FontSize="18" Foreground="{StaticResource DangerBrush}" Margin="0,0,0,10"/>
-                         <TextBlock Text="Clear all application data including projects and time logs." Foreground="{StaticResource TextSecondaryBrush}"/>
-                         <TextBlock Text="This action cannot be undone." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,0"/>
-                    </StackPanel>
-                    
-                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                <StackPanel>
+                     <TextBlock Text="Danger Zone" FontWeight="SemiBold" FontSize="18" Foreground="{StaticResource DangerBrush}" Margin="0,0,0,10"/>
+                     <TextBlock Text="Clear all application data including projects and time logs." Foreground="{StaticResource TextSecondaryBrush}"/>
+                     <TextBlock Text="This action cannot be undone." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,20"/>
+
+                     <StackPanel Orientation="Vertical" HorizontalAlignment="Left">
                         <TextBlock HorizontalAlignment="Left" Margin="0,0,0,8" Opacity="0.7" Foreground="White" FontSize="13">
                             Type <Run Text="delete me" Foreground="{StaticResource DangerBrush}" FontWeight="SemiBold"/> to confirm
                         </TextBlock>
                         <StackPanel Orientation="Horizontal">
-                            <TextBox Width="200" Margin="0,0,15,0" VerticalContentAlignment="Center" 
+                            <TextBox Width="250" Margin="0,0,15,0" VerticalContentAlignment="Center" 
                                      Text="{Binding DeleteConfirmationText, UpdateSourceTrigger=PropertyChanged}"
                                      Tag="Type 'delete me' to confirm">
                                  <TextBox.Style>
@@ -100,10 +93,10 @@
                                     </Style>
                                  </TextBox.Style>
                             </TextBox>
-                            <Button Content="Clear All Data" Command="{Binding ClearDatabaseCommand}" Style="{StaticResource DangerButton}" Width="120"/>
+                            <Button Content="Clear All Data" Command="{Binding ClearDatabaseCommand}" Style="{StaticResource DangerButton}" Width="140"/>
                         </StackPanel>
                     </StackPanel>
-                </Grid>
+                </StackPanel>
             </Border>
 
         </Grid>
