@@ -12,10 +12,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <StackPanel Orientation="Horizontal" HorizontalAlignment="SpaceBetween" Margin="0,0,0,30">
+        <Grid Margin="0,0,0,30">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
             <TextBlock Text="Summary &amp; Reports" FontSize="28" FontWeight="Bold"/>
 
-            <StackPanel Orientation="Horizontal">
+            <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <DatePicker SelectedDate="{Binding StartDate}" Margin="0,0,10,0" VerticalContentAlignment="Center" Padding="5"/>
                 <TextBlock Text="-" VerticalAlignment="Center" Margin="0,0,10,0" Foreground="{StaticResource TextSecondaryBrush}"/>
                 <DatePicker SelectedDate="{Binding EndDate}" Margin="0,0,20,0" VerticalContentAlignment="Center" Padding="5"/>
@@ -33,7 +37,7 @@
                     </StackPanel>
                 </Button>
             </StackPanel>
-        </StackPanel>
+        </Grid>
 
         <!-- Stats Cards (Simulated) -->
         <Grid Grid.Row="1" Margin="0,0,0,30">

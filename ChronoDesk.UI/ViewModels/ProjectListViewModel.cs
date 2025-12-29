@@ -50,7 +50,7 @@ public class ProjectListViewModel : ViewModelBase
     {
         var list = await _projectService.GetAllProjectsAsync();
         Projects = new ObservableCollection<ProjectItemViewModel>(
-            list.Select(p => new ProjectItemViewModel(p, _projectService, this))
+            list.Where(p => !p.IsArchived).Select(p => new ProjectItemViewModel(p, _projectService, this))
         );
     }
 
