@@ -2,18 +2,22 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows;
+using ChronoDesk.Application.Interfaces;
 using ChronoDesk.UI.ViewModels;
 
 namespace ChronoDesk.UI;
 
 public partial class MainWindow : Window
 {
+    private readonly ITimerService _timerService;
     private System.Windows.Forms.NotifyIcon? _notifyIcon;
+    private bool _isRealClose = false;
 
-    public MainWindow(MainViewModel viewModel)
+    public MainWindow(MainViewModel viewModel, ITimerService timerService)
     {
         InitializeComponent();
         DataContext = viewModel;
+        _timerService = timerService;
         InitializeTrayIcon();
     }
 
@@ -43,28 +47,53 @@ public partial class MainWindow : Window
 
     private void CloseApp()
     {
+        // Explicit exit from tray
+        _isRealClose = true;
         _notifyIcon?.Dispose();
         _notifyIcon = null;
         System.Windows.Application.Current.Shutdown();
     }
 
-    protected override void OnStateChanged(EventArgs e)
+    protected override async void OnClosing(CancelEventArgs e)
     {
-        if (WindowState == WindowState.Minimized)
+        if (_isRealClose)
         {
-            Hide();
+            base.OnClosing(e);
+            return;
         }
-        base.OnStateChanged(e);
+
+        // Prevent default close immediately to check timer
+        e.Cancel = true;
+
+        var activeTimer = await _timerService.GetCurrentTimerAsync();
+        if (activeTimer != null)
+        {
+            var result = System.Windows.MessageBox.Show(
+                "A timer is currently running.\n\nDo you want to stop the timer and close the application?",
+                "Timer Running",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Warning);
+
+            if (result == MessageBoxResult.Yes)
+            {
+                await _timerService.StopTimerAsync();
+                ProceedWithClosing();
+            }
+            // If No, do nothing (keep app open)
+        }
+        else
+        {
+            // No timer, just close
+            ProceedWithClosing();
+        }
     }
 
-    protected override void OnClosing(CancelEventArgs e)
+    private void ProceedWithClosing()
     {
-        // Don't close, minimize to tray unless explicit exit
-        if (_notifyIcon != null)
-        {
-            e.Cancel = true;
-            Hide(); // Just hide
-        }
-        base.OnClosing(e);
+        _isRealClose = true;
+        // Verify access on UI thread (OnClosing is UI thread, async continuation implies UI context usually in WPF)
+        _notifyIcon?.Dispose();
+        _notifyIcon = null;
+        System.Windows.Application.Current.Shutdown();
     }
 }
