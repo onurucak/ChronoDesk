@@ -1,0 +1,73 @@
+using System;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using System.Windows.Input;
+using ChronoDesk.Application.Interfaces;
+using ChronoDesk.Domain.Interfaces;
+using Microsoft.Win32;
+
+namespace ChronoDesk.UI.ViewModels;
+
+public class SummaryViewModel : ViewModelBase
+{
+    private readonly IReportService _reportService;
+    private readonly ICsvExportService _csvExportService;
+    private readonly ITimeEntryRepository _timeEntryRepository; // Direct access for export convenience
+
+    private DateTime _startDate = DateTime.Today.AddDays(-7);
+    public DateTime StartDate
+    {
+        get => _startDate;
+        set => SetField(ref _startDate, value);
+    }
+
+    private DateTime _endDate = DateTime.Today.AddDays(1).AddTicks(-1);
+    public DateTime EndDate
+    {
+        get => _endDate;
+        set => SetField(ref _endDate, value);
+    }
+
+    private ObservableCollection<ProjectSummaryDto> _projectSummaries = new();
+    public ObservableCollection<ProjectSummaryDto> ProjectSummaries
+    {
+        get => _projectSummaries;
+        set => SetField(ref _projectSummaries, value);
+    }
+
+    public ICommand RefreshCommand { get; }
+    public ICommand ExportCommand { get; }
+
+    public SummaryViewModel(IReportService reportService, ICsvExportService csvExportService, ITimeEntryRepository timeEntryRepository)
+    {
+        _reportService = reportService;
+        _csvExportService = csvExportService;
+        _timeEntryRepository = timeEntryRepository;
+
+        RefreshCommand = new RelayCommand(async _ => await LoadDataAsync());
+        ExportCommand = new RelayCommand(async _ => await ExportCsvAsync());
+
+        LoadDataAsync();
+    }
+
+    private async Task LoadDataAsync()
+    {
+        var summaries = await _reportService.GetProjectSummariesAsync(StartDate, EndDate);
+        ProjectSummaries = new ObservableCollection<ProjectSummaryDto>(summaries);
+    }
+
+    private async Task ExportCsvAsync()
+    {
+        var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+        {
+            Filter = "CSV files (*.csv)|*.csv",
+            FileName = $"ChronoDesk_Export_{DateTime.Now:yyyyMMdd}"
+        };
+
+        if (saveFileDialog.ShowDialog() == true)
+        {
+            var entries = await _timeEntryRepository.FindAsync(t => t.StartTime >= StartDate && t.StartTime <= EndDate);
+            await _csvExportService.ExportAsync(entries, saveFileDialog.FileName);
+        }
+    }
+}
