@@ -32,15 +32,27 @@ public class SummaryViewModel : ViewModelBase
     public ObservableCollection<ProjectSummaryDto> ProjectSummaries
     {
         get => _projectSummaries;
-        set => SetField(ref _projectSummaries, value);
+        set
+        {
+            SetField(ref _projectSummaries, value);
+            OnPropertyChanged(nameof(IsProjectSummariesEmpty));
+        }
     }
+
+    public bool IsProjectSummariesEmpty => ProjectSummaries.Count == 0;
 
     private ObservableCollection<TimeEntryDto> _recentSessions = new();
     public ObservableCollection<TimeEntryDto> RecentSessions
     {
         get => _recentSessions;
-        set => SetField(ref _recentSessions, value);
+        set
+        {
+            SetField(ref _recentSessions, value);
+            OnPropertyChanged(nameof(IsRecentSessionsEmpty));
+        }
     }
+
+    public bool IsRecentSessionsEmpty => RecentSessions.Count == 0;
 
     private string _errorMessage = string.Empty;
     public string ErrorMessage

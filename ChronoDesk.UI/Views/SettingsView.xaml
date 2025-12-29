@@ -29,18 +29,7 @@
                 <StackPanel>
                     <TextBlock Text="Preferences" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,25"/>
 
-                    <!-- Dark Mode -->
-                    <DockPanel Margin="0,0,0,25">
-                        <StackPanel DockPanel.Dock="Left">
-                             <TextBlock Text="Dark Mode" FontSize="15" FontWeight="Medium"/>
-                             <TextBlock Text="Enable dark theme for the application" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
-                        </StackPanel>
-                        <CheckBox IsChecked="{Binding IsDarkModeEnabled, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
-                             <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                             </CheckBox.LayoutTransform>
-                        </CheckBox>
-                    </DockPanel>
+
 
                     <!-- Auto-save -->
                     <DockPanel>

@@ -13,19 +13,7 @@ public class SettingsViewModel : ViewModelBase
 
     public string Version => "1.0.0";
 
-    public bool IsDarkModeEnabled
-    {
-        get => _settingsService.IsDarkModeEnabled;
-        set
-        {
-            if (_settingsService.IsDarkModeEnabled != value)
-            {
-                _settingsService.IsDarkModeEnabled = value;
-                OnPropertyChanged();
-                SaveSettingsAsync();
-            }
-        }
-    }
+
 
     public bool IsAutoSaveEnabled
     {

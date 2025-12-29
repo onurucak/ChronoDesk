@@ -255,6 +255,90 @@
             </Setter>
         </Style>
 
+        <!-- DatePicker Style -->
+        <Style TargetType="DatePicker">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="IsTodayHighlighted" Value="True"/>
+            <Setter Property="SelectedDateFormat" Value="Short"/>
+            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="2"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DatePicker">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <Grid x:Name="PART_Root" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <DatePickerTextBox x:Name="PART_TextBox"
+                                                   Grid.Column="0"
+                                                   HorizontalContentAlignment="Stretch"
+                                                   VerticalContentAlignment="Stretch" 
+                                                   Background="Transparent" 
+                                                   Foreground="{TemplateBinding Foreground}"
+                                                   Focusable="{TemplateBinding Focusable}"/>
+                                <Button x:Name="PART_Button"
+                                        Grid.Column="1"
+                                        Width="20"
+                                        Foreground="{TemplateBinding Foreground}"
+                                        Focusable="False"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Top"
+                                        Margin="3,0,3,0">
+                                    <Button.Template>
+                                        <ControlTemplate TargetType="Button">
+                                            <Grid Background="Transparent">
+                                                <TextBlock Text="&#xE787;" FontFamily="Segoe MDL2 Assets" FontSize="14" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                            </Grid>
+                                        </ControlTemplate>
+                                    </Button.Template>
+                                </Button>
+                                <Popup x:Name="PART_Popup"
+                                       AllowsTransparency="True"
+                                       Placement="Bottom"
+                                       PlacementTarget="{Binding ElementName=PART_Root}"
+                                       StaysOpen="False"/>
+                            </Grid>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- DatePickerTextBox Style (Implicit) -->
+        <Style TargetType="DatePickerTextBox">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="DatePickerTextBox">
+                        <Grid>
+                            <TextBox x:Name="PART_TextBox"
+                                     Text="{Binding Path=Text, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}" 
+                                     Foreground="{TemplateBinding Foreground}"
+                                     Background="{TemplateBinding Background}"
+                                     BorderThickness="0"
+                                     VerticalContentAlignment="Center"/>
+                            <TextBlock Text="Select date" Foreground="#888" Margin="2,0,0,0" VerticalAlignment="Center" IsHitTestVisible="False"
+                                       Visibility="{Binding Text.IsEmpty, ElementName=PART_TextBox, Converter={StaticResource BooleanToVisibilityConverter}}">
+                                       <!-- Optional watermark -->
+                            </TextBlock>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+
         <!-- Card Container Style -->
         <Style x:Key="CardStyle" TargetType="Border">
             <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
