@@ -6,6 +6,7 @@ using System.Windows.Input;
 using System.Windows.Threading;
 using ChronoDesk.Application.Interfaces;
 using ChronoDesk.Domain.Entities;
+using ChronoDesk.UI.Services;
 
 namespace ChronoDesk.UI.ViewModels;
 
@@ -13,14 +14,10 @@ public class TimerViewModel : ViewModelBase
 {
     private readonly ITimerService _timerService;
     private readonly IProjectService _projectService;
+    private readonly ProjectStore _projectStore;
     private readonly DispatcherTimer _uiTimer;
 
-    private ObservableCollection<Project> _projects = new();
-    public ObservableCollection<Project> Projects
-    {
-        get => _projects;
-        set => SetField(ref _projects, value);
-    }
+    public ObservableCollection<Project> Projects => _projectStore.Projects;
 
     private Project? _selectedProject;
     public Project? SelectedProject
@@ -65,10 +62,11 @@ public class TimerViewModel : ViewModelBase
     public ICommand StopCommand { get; }
     public ICommand UpdateNotesCommand { get; }
 
-    public TimerViewModel(ITimerService timerService, IProjectService projectService)
+    public TimerViewModel(ITimerService timerService, IProjectService projectService, ProjectStore projectStore)
     {
         _timerService = timerService;
         _projectService = projectService;
+        _projectStore = projectStore;
 
         StartCommand = new RelayCommand(async _ => await StartTimerAsync(), _ => !IsTimerRunning && SelectedProject != null);
         StopCommand = new RelayCommand(async _ => await StopTimerAsync(), _ => IsTimerRunning);
@@ -85,9 +83,8 @@ public class TimerViewModel : ViewModelBase
 
     private async void LoadDataAsync()
     {
-        var projects = await _projectService.GetAllProjectsAsync();
-        Projects = new ObservableCollection<Project>(projects.Where(p => !p.IsArchived));
-
+        // Projects loaded by App.xaml.cs via Store, so we just check active timer
+        // We might need to ensure SelectedProject is set if running
         var active = await _timerService.GetCurrentTimerAsync();
         if (active != null)
         {

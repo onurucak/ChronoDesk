@@ -4,12 +4,14 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using ChronoDesk.Application.Interfaces;
 using ChronoDesk.Domain.Entities;
+using ChronoDesk.UI.Services;
 
 namespace ChronoDesk.UI.ViewModels;
 
 public class ProjectListViewModel : ViewModelBase
 {
     private readonly IProjectService _projectService;
+    private readonly ProjectStore _projectStore;
 
     private ObservableCollection<ProjectItemViewModel> _projects = new();
     public ObservableCollection<ProjectItemViewModel> Projects
@@ -38,33 +40,32 @@ public class ProjectListViewModel : ViewModelBase
 
     public ICommand CreateProjectCommand { get; }
 
-    public ProjectListViewModel(IProjectService projectService)
+    public ProjectListViewModel(IProjectService projectService, ProjectStore projectStore)
     {
         _projectService = projectService;
+        _projectStore = projectStore;
         CreateProjectCommand = new RelayCommand(async _ => await CreateProjectAsync(), _ => !string.IsNullOrWhiteSpace(NewProjectName));
         
-        LoadProjectsAsync();
-    }
-
-    private async void LoadProjectsAsync()
-    {
-        var list = await _projectService.GetAllProjectsAsync();
-        Projects = new ObservableCollection<ProjectItemViewModel>(
-            list.Where(p => !p.IsArchived).Select(p => new ProjectItemViewModel(p, _projectService, this))
-        );
+        // Sync with store
+        _projectStore.Projects.CollectionChanged += (s, e) => RefreshList();
+        RefreshList();
     }
 
     public void RefreshList()
     {
-        LoadProjectsAsync();
+        // Wrap store items in VM
+        Projects = new ObservableCollection<ProjectItemViewModel>(
+            _projectStore.Projects.Select(p => new ProjectItemViewModel(p, _projectService, this, _projectStore))
+        );
     }
 
     private async Task CreateProjectAsync()
     {
-        await _projectService.CreateProjectAsync(NewProjectName, NewProjectDescription);
+        var project = await _projectService.CreateProjectAsync(NewProjectName, NewProjectDescription);
+        _projectStore.Add(project);
+        
         NewProjectName = string.Empty;
         NewProjectDescription = string.Empty;
-        LoadProjectsAsync();
     }
 }
 
@@ -72,6 +73,7 @@ public class ProjectItemViewModel : ViewModelBase
 {
     private readonly IProjectService _projectService;
     private readonly ProjectListViewModel _parentViewModel;
+    private readonly ProjectStore _projectStore;
     private Project _project;
 
     public Guid Id => _project.Id;
@@ -109,11 +111,12 @@ public class ProjectItemViewModel : ViewModelBase
     public ICommand CancelEditCommand { get; }
     public ICommand ArchiveCommand { get; }
 
-    public ProjectItemViewModel(Project project, IProjectService projectService, ProjectListViewModel parentViewModel)
+    public ProjectItemViewModel(Project project, IProjectService projectService, ProjectListViewModel parentViewModel, ProjectStore projectStore)
     {
         _project = project;
         _projectService = projectService;
         _parentViewModel = parentViewModel;
+        _projectStore = projectStore;
 
         EditCommand = new RelayCommand(_ => StartEdit());
         SaveEditCommand = new RelayCommand(async _ => await SaveEditAsync(), _ => !string.IsNullOrWhiteSpace(EditName));
@@ -137,31 +140,27 @@ public class ProjectItemViewModel : ViewModelBase
 
     private async Task SaveEditAsync()
     {
-        // Ideally we'd have an Update method in service, for now we might need to implement it or use what's available.
-        // Assuming NO update method exists yet based on interface files seen earlier. 
-        // Wait, I need to check IProjectService.
-        // If not exists, I might need to add it. For now let's assume I can add it or it exists.
-        // Actually, looking at previous context, there is likely NO update method. I should add it.
-        // For this step I'll assume UpdateProjectAsync exists on service or I will add it in next step.
-        // To be safe I will add a TODO here and add the method to Service in next tool calls if needed.
-        
-        // Let's check IProjectService content first? No, I am in execution. I will assume I need to add it.
-        // I will write the code assuming it exists.0
+        if (_project != null)
+        {
+            await _projectService.UpdateProjectAsync(Id, EditName, EditDescription);
+            
+            // Update local object
+            _project.Name = EditName;
+            _project.Description = EditDescription;
+            
+            // Notify Store (which triggers UI refresh if list bound, but here updating props is enough if observing)
+            _projectStore.Update(_project);
 
-        // Actually, to avoid compilation error, I will check service now.
-        // I'll proceed with this file change assuming I will add the method immediately after.
-        
-        await _projectService.UpdateProjectAsync(Id, EditName, EditDescription);
-        _project.Name = EditName;
-        _project.Description = EditDescription;
-        OnPropertyChanged(nameof(Name));
-        OnPropertyChanged(nameof(Description));
-        IsEditing = false;
+            OnPropertyChanged(nameof(Name));
+            OnPropertyChanged(nameof(Description));
+            IsEditing = false;
+        }
     }
 
     private async Task ArchiveAsync()
     {
         await _projectService.ArchiveProjectAsync(Id);
-        _parentViewModel.RefreshList();
+        _project.IsArchived = true;
+        _projectStore.Update(_project); // This will remove it from store due to IsArchived check
     }
 }

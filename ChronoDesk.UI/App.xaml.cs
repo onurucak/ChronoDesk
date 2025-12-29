@@ -12,6 +12,7 @@ using ChronoDesk.UI.Views;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using ChronoDesk.UI.Services;
 
 namespace ChronoDesk.UI;
 
@@ -41,6 +42,10 @@ public partial class App : System.Windows.Application
         services.AddSingleton<ITimerService, TimerService>();
         services.AddScoped<IReportService, ReportService>();
 
+        // UI - Services
+        services.AddSingleton<ProjectStore>();
+        services.AddSingleton<ISettingsService, SettingsService>();
+
         // UI - ViewModels
         services.AddSingleton<MainViewModel>();
         services.AddTransient<ProjectListViewModel>();
@@ -62,6 +67,13 @@ public partial class App : System.Windows.Application
             var context = scope.ServiceProvider.GetRequiredService<ChronoDbContext>();
             await context.Database.MigrateAsync();
         }
+
+        // Initialize Stores/Settings
+        var settings = ServiceProvider.GetRequiredService<ISettingsService>();
+        await settings.LoadSettingsAsync();
+
+        var projectStore = ServiceProvider.GetRequiredService<ProjectStore>();
+        await projectStore.LoadProjectsAsync();
 
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         mainWindow.Show();
