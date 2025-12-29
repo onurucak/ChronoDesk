@@ -4,25 +4,107 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="20">
-        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
-            
-            <TextBlock Text="Current Timer" FontSize="20" HorizontalAlignment="Center" Margin="0,0,0,20"/>
+             d:DesignHeight="600" d:DesignWidth="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
-            <ComboBox ItemsSource="{Binding Projects}" SelectedItem="{Binding SelectedProject}" DisplayMemberPath="Name" Width="300" Margin="0,0,0,20" Padding="5">
-            </ComboBox>
-            
-            <TextBlock Text="{Binding CurrentDuration}" FontSize="60" FontWeight="Bold" HorizontalAlignment="Center" Margin="0,0,0,20"/>
-            
-            <TextBox Text="{Binding CurrentNotes}" Width="300" Height="60" AcceptsReturn="True" Margin="0,0,0,10" Padding="5"/>
-            <Button Content="Update Notes" Command="{Binding UpdateNotesCommand}" Width="100" Margin="0,0,0,20"/>
+        <TextBlock Text="Timer" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                <Button Content="Start" Command="{Binding StartCommand}" Width="100" Height="40" Background="Green" Foreground="White" Margin="10"/>
-                <Button Content="Stop" Command="{Binding StopCommand}" Width="100" Height="40" Background="Red" Foreground="White" Margin="10"/>
+        <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
+            <StackPanel>
+                <!-- Project Selection -->
+                <TextBlock Text="Select Project" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                <ComboBox ItemsSource="{Binding Projects}" 
+                          SelectedItem="{Binding SelectedProject}" 
+                          DisplayMemberPath="Name" 
+                          Height="40"
+                          Margin="0,0,0,30"/>
+                
+                <!-- Timer Display -->
+                <TextBlock Text="{Binding CurrentDuration}" 
+                           FontSize="96" 
+                           FontWeight="Light" 
+                           HorizontalAlignment="Center" 
+                           Foreground="{StaticResource TextBrush}"
+                           Margin="0,0,0,30"
+                           FontFamily="Segoe UI Light"/>
+                
+                <!-- Notes -->
+                <TextBlock Text="What are you working on?" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>
+                <TextBox Text="{Binding CurrentNotes}" 
+                         Height="80" 
+                         TextWrapping="Wrap" 
+                         AcceptsReturn="True" 
+                         VerticalContentAlignment="Top"
+                         Margin="0,0,0,40"/>
+
+                <!-- Actions -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    
+                    <Button Content="Start Timer" 
+                            Command="{Binding StartCommand}" 
+                            Style="{StaticResource PrimaryButton}"
+                            Height="50"
+                            Margin="0,0,10,0"
+                            FontSize="16">
+                         <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                                        <ContentPresenter/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.9"/>
+                                    </Trigger>
+                                     <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.3"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    
+                    <Button Grid.Column="1" 
+                            Content="Stop Timer" 
+                            Command="{Binding StopCommand}" 
+                            Style="{StaticResource DangerButton}"
+                            Height="50"
+                            Margin="10,0,0,0"
+                            FontSize="16">
+                         <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="6">
+                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                        <TextBlock Text="&#xE71A;" FontFamily="Segoe MDL2 Assets" Margin="0,0,10,0"/>
+                                        <ContentPresenter/>
+                                    </StackPanel>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Opacity" Value="0.9"/>
+                                    </Trigger>
+                                     <Trigger Property="IsEnabled" Value="False">
+                                        <Setter Property="Opacity" Value="0.3"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                </Grid>
+                
+                <Button Content="Save Notes" Command="{Binding UpdateNotesCommand}" Style="{StaticResource SecondaryButton}" HorizontalAlignment="Center" Margin="0,20,0,0" Width="120"/>
+
             </StackPanel>
-            
-        </StackPanel>
+        </Border>
     </Grid>
 </UserControl>

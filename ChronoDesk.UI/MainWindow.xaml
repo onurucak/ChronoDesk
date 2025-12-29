@@ -6,8 +6,9 @@
         xmlns:vm="clr-namespace:ChronoDesk.UI.ViewModels"
         xmlns:views="clr-namespace:ChronoDesk.UI.Views"
         mc:Ignorable="d"
-        Title="ChronoDesk" Height="600" Width="900" 
-        WindowStartupLocation="CenterScreen">
+        Title="ChronoDesk" Height="760" Width="1180" MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen"
+        Background="{StaticResource BackgroundBrush}">
     
     <Window.Resources>
         <DataTemplate DataType="{x:Type vm:TimerViewModel}">
@@ -26,23 +27,93 @@
 
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="220"/>
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
         <!-- Sidebar Navigation -->
-        <Border Grid.Column="0" Background="#333">
-            <StackPanel Margin="10">
-                <TextBlock Text="ChronoDesk" Foreground="White" FontSize="20" FontWeight="Bold" Margin="10,0,0,20"/>
+        <Border Grid.Column="0" Background="#18191C" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <StackPanel Margin="0,20,0,0">
+                <!-- Branding -->
+                <StackPanel Orientation="Horizontal" Margin="24,0,0,30">
+                     <TextBlock Text="&#xE916;" FontFamily="Segoe MDL2 Assets" FontSize="20" Foreground="{StaticResource PrimaryBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                     <TextBlock Text="ChronoDesk" Foreground="White" FontSize="20" FontWeight="Bold" VerticalAlignment="Center"/>
+                </StackPanel>
                 
-                <Button Content="Timer" Command="{Binding NavigateToTimerCommand}" Margin="0,5" Padding="10" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left"/>
-                <Button Content="Projects" Command="{Binding NavigateToProjectsCommand}" Margin="0,5" Padding="10" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left"/>
-                <Button Content="Summary" Command="{Binding NavigateToSummaryCommand}" Margin="0,5" Padding="10" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left"/>
-                <Button Content="Settings" Command="{Binding NavigateToSettingsCommand}" Margin="0,5" Padding="10" Background="Transparent" Foreground="White" BorderThickness="0" HorizontalContentAlignment="Left"/>
+                <!-- Nav Items -->
+                <Button Command="{Binding NavigateToTimerCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE916;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Timer" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewModel, Converter={StaticResource ViewModelTypeConverter}, ConverterParameter={x:Type vm:TimerViewModel}}" Value="True">
+                                    <Setter Property="Background" Value="#252526"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                    <!-- In a perfect world we target the 'Indicator' border in template, but simpler: colored text/bg -->
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button Command="{Binding NavigateToProjectsCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE8F1;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Projects" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewModel, Converter={StaticResource ViewModelTypeConverter}, ConverterParameter={x:Type vm:ProjectListViewModel}}" Value="True">
+                                    <Setter Property="Background" Value="#252526"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button Command="{Binding NavigateToSummaryCommand}">
+                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Summary" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewModel, Converter={StaticResource ViewModelTypeConverter}, ConverterParameter={x:Type vm:SummaryViewModel}}" Value="True">
+                                    <Setter Property="Background" Value="#252526"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                
+                <Button Command="{Binding NavigateToSettingsCommand}">
+                     <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="&#xE713;" FontFamily="Segoe MDL2 Assets" FontSize="16" Margin="0,0,12,0" VerticalAlignment="Center"/>
+                        <TextBlock Text="Settings" VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource SidebarButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding CurrentViewModel, Converter={StaticResource ViewModelTypeConverter}, ConverterParameter={x:Type vm:SettingsViewModel}}" Value="True">
+                                    <Setter Property="Background" Value="#252526"/>
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
             </StackPanel>
         </Border>
 
         <!-- Main Content -->
-        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" Margin="10"/>
+        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" Margin="30"/>
     </Grid>
 </Window>
