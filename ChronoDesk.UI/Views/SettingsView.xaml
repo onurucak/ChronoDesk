@@ -93,21 +93,26 @@
                          <TextBlock Text="This action cannot be undone." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,0"/>
                     </StackPanel>
                     
-                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                        <TextBox Width="200" Margin="0,0,15,0" VerticalContentAlignment="Center" 
-                                 Text="{Binding DeleteConfirmationText, UpdateSourceTrigger=PropertyChanged}"
-                                 Tag="Type 'delete me' to confirm">
-                             <TextBox.Style>
-                                <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
-                                    <Style.Triggers>
-                                        <Trigger Property="Text" Value="">
-                                            <Setter Property="Background" Value="#252526"/>
-                                        </Trigger>
-                                    </Style.Triggers>
-                                </Style>
-                             </TextBox.Style>
-                        </TextBox>
-                        <Button Content="Clear All Data" Command="{Binding ClearDatabaseCommand}" Style="{StaticResource DangerButton}" Width="120"/>
+                    <StackPanel Grid.Column="1" VerticalAlignment="Center" HorizontalAlignment="Right">
+                        <TextBlock HorizontalAlignment="Left" Margin="0,0,0,8" Opacity="0.7" Foreground="White" FontSize="13">
+                            Type <Run Text="delete me" Foreground="{StaticResource DangerBrush}" FontWeight="SemiBold"/> to confirm
+                        </TextBlock>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBox Width="200" Margin="0,0,15,0" VerticalContentAlignment="Center" 
+                                     Text="{Binding DeleteConfirmationText, UpdateSourceTrigger=PropertyChanged}"
+                                     Tag="Type 'delete me' to confirm">
+                                 <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource {x:Type TextBox}}">
+                                        <Style.Triggers>
+                                            <Trigger Property="Text" Value="">
+                                                <Setter Property="Background" Value="#252526"/>
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                 </TextBox.Style>
+                            </TextBox>
+                            <Button Content="Clear All Data" Command="{Binding ClearDatabaseCommand}" Style="{StaticResource DangerButton}" Width="120"/>
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </Border>
