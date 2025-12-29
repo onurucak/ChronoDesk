@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Timer" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
+        <TextBlock Text="Timer" Style="{StaticResource H1}"/>
 
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="40" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600">
             <StackPanel>
@@ -30,7 +30,22 @@
                            HorizontalAlignment="Center" 
                            Foreground="{StaticResource TextBrush}"
                            Margin="0,0,0,30"
-                           FontFamily="Segoe UI Light"/>
+                           FontFamily="Segoe UI Light">
+                    <TextBlock.Style>
+                        <Style TargetType="TextBlock">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsTimerRunning}" Value="True">
+                                    <DataTrigger.EnterActions>
+                                        <BeginStoryboard x:Name="PulseStoryboard" Storyboard="{StaticResource PulseAnimation}"/>
+                                    </DataTrigger.EnterActions>
+                                    <DataTrigger.ExitActions>
+                                        <StopStoryboard BeginStoryboardName="PulseStoryboard"/>
+                                    </DataTrigger.ExitActions>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBlock.Style>
+                </TextBlock>
                 
                 <!-- Notes -->
                 <TextBlock Text="What are you working on?" Foreground="{StaticResource TextSecondaryBrush}" Margin="0,0,0,8"/>

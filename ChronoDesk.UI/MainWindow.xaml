@@ -32,8 +32,14 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Sidebar Navigation -->
-        <Border Grid.Column="0" Background="#18191C" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+        <!-- Sidebar -->
+        <Border Grid.RowSpan="2" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,1,0">
+            <Border.Background>
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#252526" Offset="0"/>
+                    <GradientStop Color="#1E1E1E" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.Background>
             <StackPanel Margin="0,20,0,0">
                 <!-- Branding -->
                 <StackPanel Orientation="Horizontal" Margin="24,0,0,30">
@@ -115,6 +121,24 @@
         </Border>
 
         <!-- Main Content -->
-        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel}" Margin="30"/>
+        <ContentControl Grid.Column="1" Content="{Binding CurrentViewModel, NotifyOnTargetUpdated=True}" Margin="30">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Setter Property="RenderTransform">
+                        <Setter.Value>
+                            <TranslateTransform Y="0"/>
+                        </Setter.Value>
+                    </Setter>
+                    <Style.Triggers>
+                        <EventTrigger RoutedEvent="Binding.TargetUpdated">
+                            <BeginStoryboard Storyboard="{StaticResource FadeIn}"/>
+                        </EventTrigger>
+                        <EventTrigger RoutedEvent="Loaded">
+                            <BeginStoryboard Storyboard="{StaticResource FadeIn}"/>
+                        </EventTrigger>
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
     </Grid>
 </Window>

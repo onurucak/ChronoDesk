@@ -12,12 +12,12 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Projects" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
+        <TextBlock Text="Projects" Style="{StaticResource H1}"/>
 
         <!-- Create Project Card -->
         <Border Grid.Row="1" Style="{StaticResource CardStyle}" Padding="20" Margin="0,0,0,30">
             <StackPanel>
-                <TextBlock Text="Create New Project" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,20"/>
+                <TextBlock Text="Create New Project" Style="{StaticResource H2}"/>
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
@@ -76,7 +76,7 @@
                                 </StackPanel>
                                 <StackPanel Grid.Column="1" Orientation="Horizontal">
                                     <Button Content="Edit" Command="{Binding EditCommand}" Style="{StaticResource SecondaryButton}" Margin="0,0,10,0"/>
-                                    <Button Content="Archive" Command="{Binding ArchiveCommand}" Style="{StaticResource DangerButton}"/>
+                                    <Button Content="Archive" Command="{Binding ArchiveCommand}" Style="{StaticResource DangerButton}" IsEnabled="False"/>
                                 </StackPanel>
                             </Grid>
 

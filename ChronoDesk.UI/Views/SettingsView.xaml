@@ -11,7 +11,7 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
+        <TextBlock Text="Settings" Style="{StaticResource H1}"/>
 
         <Grid Grid.Row="1" Margin="0">
             <Grid.ColumnDefinitions>
@@ -27,7 +27,7 @@
             <!-- Preferences -->
             <Border Style="{StaticResource CardStyle}" Padding="30" VerticalAlignment="Top">
                 <StackPanel>
-                    <TextBlock Text="Preferences" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,25"/>
+                <TextBlock Text="Preferences" Style="{StaticResource H2}"/>
 
 
 
@@ -37,10 +37,7 @@
                              <TextBlock Text="Auto-save Timer"/>
                              <TextBlock Text="Save progress automatically every 30s" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
                         </StackPanel>
-                        <CheckBox IsChecked="{Binding IsAutoSaveEnabled, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
-                             <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                             </CheckBox.LayoutTransform>
+                        <CheckBox IsChecked="{Binding IsAutoSaveEnabled, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center">
                         </CheckBox>
                     </DockPanel>
                 </StackPanel>
@@ -52,7 +49,7 @@
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
                          <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="{StaticResource PrimaryBrush}" Margin="0,0,15,0" VerticalAlignment="Center"/>
                          <StackPanel>
-                             <TextBlock Text="About ChronoDesk" FontWeight="SemiBold" FontSize="18"/>
+                             <TextBlock Text="About ChronoDesk" Style="{StaticResource H2}" Margin="0"/>
                              <TextBlock Text="Time tracking made simple." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
                          </StackPanel>
                     </StackPanel>
@@ -71,7 +68,7 @@
             <!-- Danger Zone -->
             <Border Grid.Row="1" Grid.ColumnSpan="3" Style="{StaticResource CardStyle}" Padding="30" Margin="0,30,0,0" BorderBrush="{StaticResource DangerBrush}" BorderThickness="1">
                 <StackPanel>
-                     <TextBlock Text="Danger Zone" FontWeight="SemiBold" FontSize="18" Foreground="{StaticResource DangerBrush}" Margin="0,0,0,10"/>
+                     <TextBlock Text="Danger Zone" Style="{StaticResource H2}" Foreground="{StaticResource DangerBrush}" Margin="0,0,0,10"/>
                      <TextBlock Text="Clear all application data including projects and time logs." Foreground="{StaticResource TextSecondaryBrush}"/>
                      <TextBlock Text="This action cannot be undone." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,5,0,20"/>
 

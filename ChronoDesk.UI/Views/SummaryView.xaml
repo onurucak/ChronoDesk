@@ -17,7 +17,7 @@
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
-            <TextBlock Text="Summary &amp; Reports" FontSize="28" FontWeight="Bold"/>
+            <TextBlock Text="Summary &amp; Reports" Style="{StaticResource H1}"/>
 
             <StackPanel Grid.Column="1" Orientation="Horizontal">
                 <DatePicker SelectedDate="{Binding StartDate}" Margin="0,0,10,0" VerticalContentAlignment="Center" Padding="5"/>
@@ -86,7 +86,7 @@
                     </Grid.RowDefinitions>
                     
                     <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20">
-                        <TextBlock Text="Project Breakdown" FontWeight="SemiBold" FontSize="16"/>
+                        <TextBlock Text="Project Breakdown" Style="{StaticResource H2}" Margin="0"/>
                     </Border>
                 
                     <ListView Grid.Row="1" ItemsSource="{Binding ProjectSummaries}" BorderThickness="0" Background="Transparent" Margin="0,10">
@@ -146,7 +146,7 @@
                     </Grid.RowDefinitions>
                     
                     <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20">
-                        <TextBlock Text="Recent Sessions" FontWeight="SemiBold" FontSize="16"/>
+                        <TextBlock Text="Recent Sessions" Style="{StaticResource H2}" Margin="0"/>
                     </Border>
 
                     <ListView Grid.Row="1" ItemsSource="{Binding RecentSessions}" BorderThickness="0" Background="Transparent" Margin="0,10">
