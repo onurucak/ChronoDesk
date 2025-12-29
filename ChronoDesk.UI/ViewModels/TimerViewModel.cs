@@ -15,7 +15,9 @@ public class TimerViewModel : ViewModelBase
     private readonly ITimerService _timerService;
     private readonly IProjectService _projectService;
     private readonly ProjectStore _projectStore;
+    private readonly ISettingsService _settingsService;
     private readonly DispatcherTimer _uiTimer;
+    private int _autoSaveCounter;
 
     public ObservableCollection<Project> Projects => _projectStore.Projects;
 
@@ -62,11 +64,12 @@ public class TimerViewModel : ViewModelBase
     public ICommand StopCommand { get; }
     public ICommand UpdateNotesCommand { get; }
 
-    public TimerViewModel(ITimerService timerService, IProjectService projectService, ProjectStore projectStore)
+    public TimerViewModel(ITimerService timerService, IProjectService projectService, ProjectStore projectStore, ISettingsService settingsService)
     {
         _timerService = timerService;
         _projectService = projectService;
         _projectStore = projectStore;
+        _settingsService = settingsService;
 
         StartCommand = new RelayCommand(async _ => await StartTimerAsync(), _ => !IsTimerRunning && SelectedProject != null);
         StopCommand = new RelayCommand(async _ => await StopTimerAsync(), _ => IsTimerRunning);
@@ -97,10 +100,17 @@ public class TimerViewModel : ViewModelBase
 
     private void UiTimer_Tick(object? sender, EventArgs e)
     {
-        // We technically should re-fetch start time to be accurate or cache it
-        // For simple display, we can ask service or just calc here if we stored start time.
-        // Better: store StartTime locally in VM when found/started.
         UpdateDurationDisplay();
+        
+        if (_settingsService.IsAutoSaveEnabled)
+        {
+            _autoSaveCounter++;
+            if (_autoSaveCounter >= 30) // Auto-save every 30 seconds
+            {
+                UpdateNotesAsync(); // Fire and forget update
+                _autoSaveCounter = 0;
+            }
+        }
     }
 
     private async void UpdateDurationDisplay()

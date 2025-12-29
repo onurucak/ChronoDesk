@@ -41,6 +41,7 @@ public partial class App : System.Windows.Application
         services.AddScoped<IProjectService, ProjectService>();
         services.AddSingleton<ITimerService, TimerService>();
         services.AddScoped<IReportService, ReportService>();
+        services.AddSingleton<IDataMaintenanceService, DataMaintenanceService>();
 
         // UI - Services
         services.AddSingleton<ProjectStore>();

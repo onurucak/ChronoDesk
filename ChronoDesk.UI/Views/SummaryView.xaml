@@ -70,64 +70,137 @@
             </Border>
         </Grid>
 
-        <!-- Project Breakdown -->
-        <Border Grid.Row="2" Style="{StaticResource CardStyle}" Padding="0">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                
-                <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20">
-                    <TextBlock Text="Project Breakdown" FontWeight="SemiBold" FontSize="16"/>
-                </Border>
-                
-                <ListView Grid.Row="1" ItemsSource="{Binding ProjectSummaries}" BorderThickness="0" Background="Transparent" Margin="0,10">
-                    <ListView.ItemContainerStyle>
-                        <Style TargetType="ListViewItem">
-                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                            <Setter Property="Padding" Value="20,10"/>
-                            <Setter Property="Template">
-                                <Setter.Value>
-                                    <ControlTemplate TargetType="ListViewItem">
-                                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
-                                            <ContentPresenter/>
-                                        </Border>
-                                        <ControlTemplate.Triggers>
-                                            <Trigger Property="IsMouseOver" Value="True">
-                                                <Setter Property="Background" Value="#2D2D30"/>
-                                            </Trigger>
-                                        </ControlTemplate.Triggers>
-                                    </ControlTemplate>
-                                </Setter.Value>
-                            </Setter>
-                        </Style>
-                    </ListView.ItemContainerStyle>
-                    <ListView.ItemTemplate>
-                        <DataTemplate>
-                            <Grid>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*"/>
-                                    <ColumnDefinition Width="Auto"/>
-                                </Grid.ColumnDefinitions>
-                                <TextBlock Text="{Binding ProjectName}" FontSize="15" VerticalAlignment="Center"/>
-                                <TextBlock Grid.Column="1" Text="{Binding TotalDuration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
-                            </Grid>
-                        </DataTemplate>
-                    </ListView.ItemTemplate>
-                </ListView>
+        <!-- Project Breakdown & Recent Sessions -->
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
 
-                <!-- Empty State -->
-                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
-                            Visibility="{Binding ProjectSummaries.Count, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
-                     <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="40" Foreground="{StaticResource BorderBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                     <TextBlock Text="No data for selected period" Foreground="{StaticResource TextSecondaryBrush}" FontSize="16"/>
-                </StackPanel>
+            <!-- Project Breakdown -->
+            <Border Style="{StaticResource CardStyle}" Padding="0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20">
+                        <TextBlock Text="Project Breakdown" FontWeight="SemiBold" FontSize="16"/>
+                    </Border>
+                
+                    <ListView Grid.Row="1" ItemsSource="{Binding ProjectSummaries}" BorderThickness="0" Background="Transparent" Margin="0,10">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="20,10"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#2D2D30"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="{Binding ProjectName}" FontSize="15" VerticalAlignment="Center"/>
+                                    <TextBlock Grid.Column="1" Text="{Binding TotalDuration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
 
-                <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" 
-                           Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
-            </Grid>
-        </Border>
+                    <!-- Empty State -->
+                    <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                                Visibility="{Binding ProjectSummaries.Count, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                         <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="40" Foreground="{StaticResource BorderBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                         <TextBlock Text="No data for selected period" Foreground="{StaticResource TextSecondaryBrush}" FontSize="16"/>
+                    </StackPanel>
+
+                    <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" 
+                               Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
+                </Grid>
+            </Border>
+
+            <!-- Recent Sessions -->
+            <Border Grid.Column="1" Style="{StaticResource CardStyle}" Padding="0" Margin="20,0,0,0">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    
+                    <Border BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="20">
+                        <TextBlock Text="Recent Sessions" FontWeight="SemiBold" FontSize="16"/>
+                    </Border>
+
+                    <ListView Grid.Row="1" ItemsSource="{Binding RecentSessions}" BorderThickness="0" Background="Transparent" Margin="0,10">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                <Setter Property="Padding" Value="20,12"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="ListViewItem">
+                                            <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1">
+                                                <ContentPresenter/>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="IsMouseOver" Value="True">
+                                                    <Setter Property="Background" Value="#2D2D30"/>
+                                                </Trigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                            </Style>
+                        </ListView.ItemContainerStyle>
+                        <ListView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+                                    
+                                    <Grid Margin="0,0,0,5">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="Auto"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Text="{Binding ProjectName}" FontWeight="SemiBold" FontSize="14" Foreground="{StaticResource PrimaryBrush}"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Duration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    </Grid>
+                                    
+                                    <TextBlock Grid.Row="1" Text="{Binding Notes}" FontSize="13" Foreground="#DDDDDD" TextWrapping="Wrap" 
+                                               Visibility="{Binding Notes, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ListView.ItemTemplate>
+                    </ListView>
+
+                    <!-- Empty State for Recents -->
+                     <TextBlock Grid.Row="1" Text="No recent activity" Foreground="{StaticResource TextSecondaryBrush}" 
+                                HorizontalAlignment="Center" VerticalAlignment="Center"
+                                Visibility="{Binding RecentSessions.Count, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+                </Grid>
+            </Border>
+        </Grid>
     </Grid>
 </UserControl>

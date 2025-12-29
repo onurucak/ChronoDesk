@@ -35,6 +35,13 @@ public class SummaryViewModel : ViewModelBase
         set => SetField(ref _projectSummaries, value);
     }
 
+    private ObservableCollection<TimeEntryDto> _recentSessions = new();
+    public ObservableCollection<TimeEntryDto> RecentSessions
+    {
+        get => _recentSessions;
+        set => SetField(ref _recentSessions, value);
+    }
+
     private string _errorMessage = string.Empty;
     public string ErrorMessage
     {
@@ -76,6 +83,12 @@ public class SummaryViewModel : ViewModelBase
             else
             {
                 ProjectSummaries = new ObservableCollection<ProjectSummaryDto>();
+            }
+
+            var recents = await _reportService.GetRecentEntriesAsync(10);
+            if (recents != null)
+            {
+                RecentSessions = new ObservableCollection<TimeEntryDto>(recents);
             }
         }
         catch (Exception ex)

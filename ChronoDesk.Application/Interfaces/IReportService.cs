@@ -8,6 +8,17 @@ public interface IReportService
 {
     Task<IEnumerable<ProjectSummaryDto>> GetProjectSummariesAsync(DateTime start, DateTime end);
     Task<IEnumerable<DailySummaryDto>> GetDailySummariesAsync(DateTime start, DateTime end);
+    Task<IEnumerable<TimeEntryDto>> GetRecentEntriesAsync(int limit = 10);
+}
+
+public class TimeEntryDto
+{
+    public Guid Id { get; set; }
+    public string ProjectName { get; set; } = string.Empty;
+    public DateTime StartTime { get; set; }
+    public DateTime? EndTime { get; set; }
+    public TimeSpan Duration { get; set; }
+    public string Notes { get; set; } = string.Empty;
 }
 
 public class ProjectSummaryDto

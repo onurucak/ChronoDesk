@@ -62,4 +62,29 @@ public class ReportService : IReportService
             })
             .OrderBy(d => d.Date);
     }
+
+    public async Task<IEnumerable<TimeEntryDto>> GetRecentEntriesAsync(int limit = 10)
+    {
+        // Simple fetch all and take last N (efficient enough for local SQLite)
+        // Ideally repo should support Take/Skip/OrderBy
+        var all = await _timeEntryRepository.GetAllAsync(); 
+        
+        var recent = all.OrderByDescending(t => t.StartTime).Take(limit);
+        
+        var dtos = new List<TimeEntryDto>();
+        foreach(var item in recent)
+        {
+            var project = await _projectRepository.GetByIdAsync(item.ProjectId);
+            dtos.Add(new TimeEntryDto
+            {
+                Id = item.Id,
+                ProjectName = project?.Name ?? "Unknown",
+                StartTime = item.StartTime,
+                EndTime = item.EndTime,
+                Duration = item.Duration,
+                Notes = item.Notes
+            });
+        }
+        return dtos;
+    }
 }
