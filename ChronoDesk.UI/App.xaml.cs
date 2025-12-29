@@ -38,13 +38,13 @@ public partial class App : System.Windows.Application
 
         // Application
         services.AddScoped<IProjectService, ProjectService>();
-        services.AddScoped<ITimerService, TimerService>();
+        services.AddSingleton<ITimerService, TimerService>();
         services.AddScoped<IReportService, ReportService>();
 
         // UI - ViewModels
         services.AddSingleton<MainViewModel>();
         services.AddTransient<ProjectListViewModel>();
-        services.AddTransient<TimerViewModel>();
+        services.AddSingleton<TimerViewModel>();
         services.AddTransient<SummaryViewModel>();
         services.AddTransient<SettingsViewModel>();
 

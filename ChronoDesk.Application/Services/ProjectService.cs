@@ -38,13 +38,25 @@ public class ProjectService : IProjectService
         return project;
     }
 
+    public async Task UpdateProjectAsync(int id, string name, string description)
+    {
+        var project = await _projectRepository.GetByIdAsync(id);
+        if (project != null)
+        {
+            project.Name = name;
+            project.Description = description;
+            project.UpdatedAt = DateTime.UtcNow;
+            await _projectRepository.UpdateAsync(project);
+        }
+    }
+
     public async Task UpdateProjectAsync(Project project)
     {
         project.UpdatedAt = DateTime.UtcNow;
         await _projectRepository.UpdateAsync(project);
     }
 
-    public async Task ArchiveProjectAsync(Guid id)
+    public async Task ArchiveProjectAsync(int id)
     {
         var project = await _projectRepository.GetByIdAsync(id);
         if (project != null)

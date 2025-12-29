@@ -35,6 +35,19 @@ public class SummaryViewModel : ViewModelBase
         set => SetField(ref _projectSummaries, value);
     }
 
+    private string _errorMessage = string.Empty;
+    public string ErrorMessage
+    {
+        get => _errorMessage;
+        set
+        {
+            SetField(ref _errorMessage, value);
+            OnPropertyChanged(nameof(HasError));
+        }
+    }
+
+    public bool HasError => !string.IsNullOrEmpty(ErrorMessage);
+
     public ICommand RefreshCommand { get; }
     public ICommand ExportCommand { get; }
 
@@ -52,22 +65,44 @@ public class SummaryViewModel : ViewModelBase
 
     private async Task LoadDataAsync()
     {
-        var summaries = await _reportService.GetProjectSummariesAsync(StartDate, EndDate);
-        ProjectSummaries = new ObservableCollection<ProjectSummaryDto>(summaries);
+        try
+        {
+            ErrorMessage = string.Empty;
+            var summaries = await _reportService.GetProjectSummariesAsync(StartDate, EndDate);
+            if (summaries != null)
+            {
+                ProjectSummaries = new ObservableCollection<ProjectSummaryDto>(summaries);
+            }
+            else
+            {
+                ProjectSummaries = new ObservableCollection<ProjectSummaryDto>();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to load summary data: {ex.Message}";
+        }
     }
 
     private async Task ExportCsvAsync()
     {
-        var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+        try
         {
-            Filter = "CSV files (*.csv)|*.csv",
-            FileName = $"ChronoDesk_Export_{DateTime.Now:yyyyMMdd}"
-        };
+            var saveFileDialog = new Microsoft.Win32.SaveFileDialog
+            {
+                Filter = "CSV files (*.csv)|*.csv",
+                FileName = $"ChronoDesk_Export_{DateTime.Now:yyyyMMdd}"
+            };
 
-        if (saveFileDialog.ShowDialog() == true)
+            if (saveFileDialog.ShowDialog() == true)
+            {
+                var entries = await _timeEntryRepository.FindAsync(t => t.StartTime >= StartDate && t.StartTime <= EndDate);
+                await _csvExportService.ExportAsync(entries, saveFileDialog.FileName);
+            }
+        }
+        catch (Exception ex)
         {
-            var entries = await _timeEntryRepository.FindAsync(t => t.StartTime >= StartDate && t.StartTime <= EndDate);
-            await _csvExportService.ExportAsync(entries, saveFileDialog.FileName);
+            ErrorMessage = $"Failed to export data: {ex.Message}";
         }
     }
 }
