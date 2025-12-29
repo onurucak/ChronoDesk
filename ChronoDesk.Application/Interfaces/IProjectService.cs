@@ -10,7 +10,7 @@ public interface IProjectService
     Task<IEnumerable<Project>> GetAllProjectsAsync();
     Task<Project?> GetProjectByIdAsync(Guid id);
     Task<Project> CreateProjectAsync(string name, string description);
-    Task UpdateProjectAsync(int id, string name, string description);
+    Task UpdateProjectAsync(Guid id, string name, string description);
     Task UpdateProjectAsync(Project project);
-    Task ArchiveProjectAsync(int id);
+    Task ArchiveProjectAsync(Guid id);
 }

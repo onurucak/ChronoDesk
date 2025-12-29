@@ -38,7 +38,7 @@ public class ProjectService : IProjectService
         return project;
     }
 
-    public async Task UpdateProjectAsync(int id, string name, string description)
+    public async Task UpdateProjectAsync(Guid id, string name, string description)
     {
         var project = await _projectRepository.GetByIdAsync(id);
         if (project != null)
@@ -56,7 +56,7 @@ public class ProjectService : IProjectService
         await _projectRepository.UpdateAsync(project);
     }
 
-    public async Task ArchiveProjectAsync(int id)
+    public async Task ArchiveProjectAsync(Guid id)
     {
         var project = await _projectRepository.GetByIdAsync(id);
         if (project != null)

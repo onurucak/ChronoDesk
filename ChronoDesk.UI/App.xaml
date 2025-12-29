@@ -5,6 +5,8 @@
              xmlns:converters="clr-namespace:ChronoDesk.UI.Converters">
     <Application.Resources>
         <!-- Converters -->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:ViewModelTypeConverter x:Key="ViewModelTypeConverter"/>
 
         <!-- Colors (Dark Theme) -->

@@ -74,7 +74,7 @@ public class ProjectItemViewModel : ViewModelBase
     private readonly ProjectListViewModel _parentViewModel;
     private Project _project;
 
-    public int Id => _project.Id;
+    public Guid Id => _project.Id;
 
     public string Name => _project.Name;
     public string Description => _project.Description;
