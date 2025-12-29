@@ -117,6 +117,13 @@
                     </ListView.ItemTemplate>
                 </ListView>
 
+                <!-- Empty State -->
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                            Visibility="{Binding ProjectSummaries.Count, Converter={StaticResource InverseBooleanToVisibilityConverter}}">
+                     <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="40" Foreground="{StaticResource BorderBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                     <TextBlock Text="No data for selected period" Foreground="{StaticResource TextSecondaryBrush}" FontSize="16"/>
+                </StackPanel>
+
                 <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" 
                            Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
                            HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>

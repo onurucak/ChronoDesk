@@ -13,62 +13,72 @@
 
         <TextBlock Text="Settings" FontSize="28" FontWeight="Bold" Margin="0,0,0,30"/>
 
-        <StackPanel Grid.Row="1" MaxWidth="600" HorizontalAlignment="Left">
-            
-            <!-- About Card -->
-            <Border Style="{StaticResource CardStyle}" Padding="25">
+        <Grid Grid.Row="1" Margin="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" MinWidth="300"/>
+                <ColumnDefinition Width="20"/>
+                <ColumnDefinition Width="*" MinWidth="300"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <!-- Preferences -->
+            <Border Style="{StaticResource CardStyle}" Padding="30" VerticalAlignment="Top">
                 <StackPanel>
-                    <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
-                         <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="24" Foreground="{StaticResource PrimaryBrush}" Margin="0,0,15,0" VerticalAlignment="Center"/>
+                    <TextBlock Text="Preferences" FontWeight="SemiBold" FontSize="18" Margin="0,0,0,25"/>
+
+                    <!-- Dark Mode -->
+                    <DockPanel Margin="0,0,0,25">
+                        <StackPanel DockPanel.Dock="Left">
+                             <TextBlock Text="Dark Mode" FontSize="15" FontWeight="Medium"/>
+                             <TextBlock Text="Enable dark theme for the application" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <CheckBox IsChecked="{Binding IsDarkModeEnabled, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
+                             <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                             </CheckBox.LayoutTransform>
+                        </CheckBox>
+                    </DockPanel>
+
+                    <!-- Auto-save -->
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Left">
+                             <TextBlock Text="Auto-save Timer"/>
+                             <TextBlock Text="Save progress automatically every 30s" Foreground="{StaticResource TextSecondaryBrush}" FontSize="13" Margin="0,4,0,0"/>
+                        </StackPanel>
+                        <CheckBox IsChecked="{Binding IsAutoSaveEnabled, Mode=TwoWay}" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
+                             <CheckBox.LayoutTransform>
+                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
+                             </CheckBox.LayoutTransform>
+                        </CheckBox>
+                    </DockPanel>
+                </StackPanel>
+            </Border>
+
+            <!-- About Card -->
+            <Border Grid.Column="2" Style="{StaticResource CardStyle}" Padding="30" VerticalAlignment="Top">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,25">
+                         <TextBlock Text="&#xE946;" FontFamily="Segoe MDL2 Assets" FontSize="28" Foreground="{StaticResource PrimaryBrush}" Margin="0,0,15,0" VerticalAlignment="Center"/>
                          <StackPanel>
-                             <TextBlock Text="About ChronoDesk" FontWeight="SemiBold" FontSize="16"/>
+                             <TextBlock Text="About ChronoDesk" FontWeight="SemiBold" FontSize="18"/>
                              <TextBlock Text="Time tracking made simple." Foreground="{StaticResource TextSecondaryBrush}" Margin="0,4,0,0"/>
                          </StackPanel>
                     </StackPanel>
                     
-                    <Grid Margin="0,0,0,10">
-                        <TextBlock Text="App Version"/>
-                        <TextBlock Text="{Binding Version}" HorizontalAlignment="Right" Foreground="{StaticResource TextSecondaryBrush}"/>
+                    <Grid Margin="0,0,0,15">
+                        <TextBlock Text="App Version" FontSize="15"/>
+                        <TextBlock Text="{Binding Version}" HorizontalAlignment="Right" Foreground="{StaticResource TextSecondaryBrush}" FontSize="15"/>
                     </Grid>
                     <Grid>
-                        <TextBlock Text="License"/>
-                        <TextBlock Text="Open Source (MIT)" HorizontalAlignment="Right" Foreground="{StaticResource TextSecondaryBrush}"/>
+                        <TextBlock Text="License" FontSize="15"/>
+                        <TextBlock Text="Open Source (MIT)" HorizontalAlignment="Right" Foreground="{StaticResource TextSecondaryBrush}" FontSize="15"/>
                     </Grid>
                 </StackPanel>
             </Border>
 
-            <!-- Preferences (Mock) -->
-            <Border Style="{StaticResource CardStyle}" Padding="25" Margin="0,30,0,0">
-                <StackPanel>
-                     <TextBlock Text="Preferences" FontWeight="SemiBold" FontSize="16" Margin="0,0,0,20"/>
-                     
-                     <Grid Margin="0,0,0,20">
-                        <StackPanel>
-                            <TextBlock Text="Dark Mode"/>
-                            <TextBlock Text="Use system default logic" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
-                        </StackPanel>
-                        <!-- Simple Toggle Switch Lookalike Checkbox -->
-                        <CheckBox IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
-                             <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                             </CheckBox.LayoutTransform>
-                        </CheckBox>
-                    </Grid>
-
-                    <Grid>
-                        <StackPanel>
-                            <TextBlock Text="Auto-save Timer"/>
-                            <TextBlock Text="Save progress every 30 seconds" Foreground="{StaticResource TextSecondaryBrush}" FontSize="12"/>
-                        </StackPanel>
-                        <CheckBox IsChecked="True" HorizontalAlignment="Right" VerticalAlignment="Center" Style="{x:Null}">
-                             <CheckBox.LayoutTransform>
-                                <ScaleTransform ScaleX="1.5" ScaleY="1.5"/>
-                             </CheckBox.LayoutTransform>
-                        </CheckBox>
-                    </Grid>
-                </StackPanel>
-            </Border>
-
-        </StackPanel>
+        </Grid>
     </Grid>
 </UserControl>
