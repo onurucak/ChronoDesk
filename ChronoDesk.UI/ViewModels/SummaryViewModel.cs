@@ -79,7 +79,7 @@ public class SummaryViewModel : ViewModelBase
         RefreshCommand = new RelayCommand(async _ => await LoadDataAsync());
         ExportCommand = new RelayCommand(async _ => await ExportCsvAsync());
 
-        LoadDataAsync();
+        _ = LoadDataAsync();
     }
 
     private async Task LoadDataAsync()

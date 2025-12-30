@@ -81,10 +81,10 @@ public class TimerViewModel : ViewModelBase
         };
         _uiTimer.Tick += UiTimer_Tick;
 
-        LoadDataAsync();
+        _ = LoadDataAsync();
     }
 
-    private async void LoadDataAsync()
+    private async Task LoadDataAsync()
     {
         // Projects loaded by App.xaml.cs via Store, so we just check active timer
         // We might need to ensure SelectedProject is set if running
@@ -107,7 +107,7 @@ public class TimerViewModel : ViewModelBase
             _autoSaveCounter++;
             if (_autoSaveCounter >= 30) // Auto-save every 30 seconds
             {
-                UpdateNotesAsync(); // Fire and forget update
+                _ = UpdateNotesAsync(); // Fire and forget update
                 _autoSaveCounter = 0;
             }
         }

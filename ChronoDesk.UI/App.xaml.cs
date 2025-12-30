@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Threading;
 using System.Windows;
 using ChronoDesk.Application.Interfaces;
 using ChronoDesk.Application.Services;
@@ -18,10 +19,23 @@ namespace ChronoDesk.UI;
 
 public partial class App : System.Windows.Application
 {
-    public IServiceProvider ServiceProvider { get; private set; }
+    private static Mutex? _mutex;
+    private const string AppGuid = "2F6E1BD6-31E6-48EA-AF26-549BB8FB7227"; // Unique identifier for ChronoDesk
+
+    public IServiceProvider ServiceProvider { get; private set; } = null!;
 
     public App()
     {
+        // Single Instance Check
+        _mutex = new Mutex(true, AppGuid, out bool createdNew);
+        if (!createdNew)
+        {
+            // Another instance is already running
+            System.Windows.MessageBox.Show("ChronoDesk is already running.", "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.Application.Current.Shutdown();
+            return;
+        }
+
         var services = new ServiceCollection();
         ConfigureServices(services);
         ServiceProvider = services.BuildServiceProvider();

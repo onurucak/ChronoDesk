@@ -23,9 +23,29 @@ public partial class MainWindow : Window
 
     private void InitializeTrayIcon()
     {
+        System.Drawing.Icon trayIcon;
+        try
+        {
+            var iconUri = new Uri("pack://application:,,,/icon.png");
+            var resourceStream = System.Windows.Application.GetResourceStream(iconUri);
+            if (resourceStream != null)
+            {
+                using var bitmap = new System.Drawing.Bitmap(resourceStream.Stream);
+                trayIcon = System.Drawing.Icon.FromHandle(bitmap.GetHicon());
+            }
+            else
+            {
+                trayIcon = SystemIcons.Application;
+            }
+        }
+        catch
+        {
+            trayIcon = SystemIcons.Application;
+        }
+
         _notifyIcon = new System.Windows.Forms.NotifyIcon
         {
-            Icon = SystemIcons.Application,
+            Icon = trayIcon,
             Visible = true,
             Text = "ChronoDesk"
         };
@@ -36,6 +56,15 @@ public partial class MainWindow : Window
         contextMenu.Items.Add("Open", null, (s, e) => ShowWindow());
         contextMenu.Items.Add("Exit", null, (s, e) => CloseApp());
         _notifyIcon.ContextMenuStrip = contextMenu;
+    }
+
+    protected override void OnStateChanged(EventArgs e)
+    {
+        if (WindowState == WindowState.Minimized)
+        {
+            Hide();
+        }
+        base.OnStateChanged(e);
     }
 
     private void ShowWindow()

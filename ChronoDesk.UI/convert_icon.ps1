@@ -1,0 +1,11 @@
+Add-Type -AssemblyName System.Drawing
+$png = [System.Drawing.Image]::FromFile("icon.png")
+$bmp = New-Object System.Drawing.Bitmap($png)
+$hIcon = $bmp.GetHicon()
+$icon = [System.Drawing.Icon]::FromHandle($hIcon)
+$fileStream = New-Object System.IO.FileStream("icon.ico", [System.IO.FileMode]::Create)
+$icon.Save($fileStream)
+$fileStream.Close()
+$icon.Dispose()
+$bmp.Dispose()
+$png.Dispose()
