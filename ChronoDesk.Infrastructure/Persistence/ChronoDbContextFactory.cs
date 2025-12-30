@@ -8,7 +8,7 @@ public class ChronoDbContextFactory : IDesignTimeDbContextFactory<ChronoDbContex
     public ChronoDbContext CreateDbContext(string[] args)
     {
         var optionsBuilder = new DbContextOptionsBuilder<ChronoDbContext>();
-        optionsBuilder.UseSqlite("Data Source=chronodesk.db");
+        optionsBuilder.UseSqlite($"Data Source={ChronoDbContext.GetDatabasePath()}");
 
         return new ChronoDbContext(optionsBuilder.Options);
     }

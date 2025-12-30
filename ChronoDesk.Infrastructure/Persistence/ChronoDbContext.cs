@@ -1,3 +1,5 @@
+using System;
+using System.IO;
 using ChronoDesk.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
@@ -17,8 +19,21 @@ public class ChronoDbContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseSqlite("Data Source=chronodesk.db");
+            optionsBuilder.UseSqlite($"Data Source={GetDatabasePath()}");
         }
+    }
+
+    public static string GetDatabasePath()
+    {
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var chronodeskPath = Path.Combine(appDataPath, "ChronoDesk");
+        
+        if (!Directory.Exists(chronodeskPath))
+        {
+            Directory.CreateDirectory(chronodeskPath);
+        }
+        
+        return Path.Combine(chronodeskPath, "chronodesk.db");
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

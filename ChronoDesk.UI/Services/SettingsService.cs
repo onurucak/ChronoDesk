@@ -23,7 +23,15 @@ public class SettingsService : ISettingsService
 
     public SettingsService()
     {
-        _filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, SettingsFileName);
+        var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
+        var chronodeskPath = Path.Combine(appDataPath, "ChronoDesk");
+        
+        if (!Directory.Exists(chronodeskPath))
+        {
+            Directory.CreateDirectory(chronodeskPath);
+        }
+        
+        _filePath = Path.Combine(chronodeskPath, SettingsFileName);
     }
 
     public async Task LoadSettingsAsync()

@@ -45,7 +45,7 @@ public partial class App : System.Windows.Application
     {
         // Infrastructure
         services.AddDbContext<ChronoDbContext>(options =>
-            options.UseSqlite("Data Source=chronodesk.db"));
+            options.UseSqlite($"Data Source={ChronoDbContext.GetDatabasePath()}"));
 
         services.AddScoped<IProjectRepository, ProjectRepository>();
         services.AddScoped<ITimeEntryRepository, TimeEntryRepository>();
