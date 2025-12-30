@@ -26,7 +26,14 @@ public class ChronoDbContext : DbContext
     public static string GetDatabasePath()
     {
         var appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        var chronodeskPath = Path.Combine(appDataPath, "ChronoDesk");
+        
+#if DEBUG
+        var folderName = "ChronoDeskDebug";
+#else
+        var folderName = "ChronoDesk";
+#endif
+        
+        var chronodeskPath = Path.Combine(appDataPath, folderName);
         
         if (!Directory.Exists(chronodeskPath))
         {
