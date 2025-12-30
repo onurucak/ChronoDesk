@@ -2,7 +2,7 @@
 
 ChronoDesk is a premium, modern Windows desktop time-tracking application built with **.NET 10** and **WPF**. Designed with a focus on aesthetics and user experience, it combines powerful time-tracking capabilities with a sleek, glassmorphism-inspired dark interface.
 
-![ChronoDesk UI](https://via.placeholder.com/800x450.png?text=ChronoDesk+Interface+Preview) <!-- Replace with actual screenshot later -->
+![ChronoDesk UI](assets/ss.png)
 
 ## ✨ Features
 
