@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using System.Windows.Input;
 using ChronoDesk.Application.Interfaces;
+using System.Reflection;
 using ChronoDesk.UI.Services;
 
 namespace ChronoDesk.UI.ViewModels;
@@ -11,7 +12,7 @@ public class SettingsViewModel : ViewModelBase
     private readonly IDataMaintenanceService _dataMaintenanceService;
     private readonly ProjectStore _projectStore;
 
-    public string Version => "1.0.0";
+    public string Version => Assembly.GetEntryAssembly()?.GetName().Version?.ToString(3) ?? "1.0.1";
 
 
 
