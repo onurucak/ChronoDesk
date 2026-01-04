@@ -11,37 +11,11 @@
         Background="#1E1E1E">
     
     <Window.Resources>
-        <Style TargetType="TextBlock">
+        <!-- Only keep window-specific overrides if absolutely necessary. 
+             Global styles in App.xaml should handle the rest. -->
+        <Style TargetType="TextBlock" BasedOn="{StaticResource {x:Type TextBlock}}">
             <Setter Property="Foreground" Value="#DDDDDD"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontFamily" Value="Segoe UI"/>
-        </Style>
-        <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="8"/>
-            <Setter Property="Margin" Value="0,0,0,20"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="Background" Value="#252526"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="#3E3E42"/>
-            <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        <Style TargetType="DatePicker">
-             <Setter Property="Margin" Value="0,0,0,20"/>
-             <Setter Property="FontSize" Value="14"/>
-             <Setter Property="Foreground" Value="White"/>
-             <Setter Property="Background" Value="#252526"/>
-             <Setter Property="BorderBrush" Value="#3E3E42"/>
-             <Setter Property="BorderThickness" Value="1"/>
-        </Style>
-        <Style TargetType="ComboBox">
-             <Setter Property="Margin" Value="0,0,0,20"/>
-             <Setter Property="FontSize" Value="14"/>
-             <Setter Property="Padding" Value="8"/>
-             <Setter Property="Background" Value="#252526"/>
-             <Setter Property="Foreground" Value="White"/>
-             <Setter Property="BorderBrush" Value="#3E3E42"/>
-             <Setter Property="BorderThickness" Value="1"/>
         </Style>
     </Window.Resources>
 
@@ -70,7 +44,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Margin="0,0,15,20" Height="40" Foreground="White" Background="{StaticResource SurfaceBrush}"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Margin="0,0,15,20" Height="40" VerticalContentAlignment="Center"/>
                     <TextBox Grid.Column="1" Text="{Binding StartTimeStr}" ToolTip="HH:mm (e.g. 14:30)" Height="40" VerticalContentAlignment="Center"/>
                 </Grid>
 
@@ -81,7 +55,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" SelectedDate="{Binding EndDate}" Margin="0,0,15,20" Height="40" Foreground="White" Background="{StaticResource SurfaceBrush}"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding EndDate}" Margin="0,0,15,20" Height="40" VerticalContentAlignment="Center"/>
                     <TextBox Grid.Column="1" Text="{Binding EndTimeStr}" ToolTip="HH:mm (e.g. 16:00)" Height="40" VerticalContentAlignment="Center"/>
                 </Grid>
 
