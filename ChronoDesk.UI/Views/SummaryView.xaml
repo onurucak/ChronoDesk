@@ -99,7 +99,7 @@
                                                 <TextBlock Text="{Binding Date, StringFormat='ddd, MMM dd'}" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,10,0"/>
                                                 <!-- Optional: Add day name explicitly if needed -->
                                             </StackPanel>
-                                            <TextBlock Grid.Column="1" Text="{Binding TotalDuration, StringFormat='hh\\:mm\\:ss'}" FontFamily="Consolas" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding TotalDuration, Converter={StaticResource TimeSpanToDurationConverter}}" FontFamily="Consolas" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"/>
                                         </Grid>
 
                                         <!-- Nested Projects List -->
@@ -115,7 +115,7 @@
                                                             <Ellipse Width="6" Height="6" Fill="{StaticResource SurfaceLightBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                                             <TextBlock Text="{Binding ProjectName}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
                                                         </StackPanel>
-                                                        <TextBlock Grid.Column="1" Text="{Binding TotalDuration, StringFormat='hh\\:mm\\:ss'}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding TotalDuration, Converter={StaticResource TimeSpanToDurationConverter}}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

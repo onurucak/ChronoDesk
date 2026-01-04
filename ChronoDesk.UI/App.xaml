@@ -8,6 +8,7 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
         <converters:InverseBooleanToVisibilityConverter x:Key="InverseBooleanToVisibilityConverter"/>
         <converters:ViewModelTypeConverter x:Key="ViewModelTypeConverter"/>
+        <converters:TimeSpanToDurationConverter x:Key="TimeSpanToDurationConverter"/>
 
         <!-- Colors (Dark Theme) -->
         <Color x:Key="PrimaryColor">#4C9EEB</Color> <!-- Blue -->
@@ -354,7 +355,7 @@
         <!-- DatePicker Style -->
         <Style TargetType="DatePicker">
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="IsTodayHighlighted" Value="True"/>
+            <Setter Property="IsTodayHighlighted" Value="False"/>
             <Setter Property="SelectedDateFormat" Value="Short"/>
             <Setter Property="Background" Value="#252526"/>
             <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
