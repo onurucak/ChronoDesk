@@ -4,7 +4,7 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Edit Session" Height="450" Width="400"
+        Title="Edit Session" Height="600" Width="500"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize"
         WindowStyle="ToolWindow"
@@ -13,25 +13,36 @@
     <Window.Resources>
         <Style TargetType="TextBlock">
             <Setter Property="Foreground" Value="#DDDDDD"/>
-            <Setter Property="Margin" Value="0,0,0,5"/>
+            <Setter Property="Margin" Value="0,0,0,8"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
         <Style TargetType="TextBox">
-            <Setter Property="Padding" Value="5"/>
-            <Setter Property="Margin" Value="0,0,0,15"/>
+            <Setter Property="Padding" Value="8"/>
+            <Setter Property="Margin" Value="0,0,0,20"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
         </Style>
         <Style TargetType="DatePicker">
-             <Setter Property="Margin" Value="0,0,0,15"/>
+             <Setter Property="Margin" Value="0,0,0,20"/>
+             <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="ComboBox">
+             <Setter Property="Margin" Value="0,0,0,20"/>
+             <Setter Property="FontSize" Value="14"/>
+             <Setter Property="Padding" Value="8"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="20">
+    <Grid Margin="30">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Title -->
             <RowDefinition Height="*"/>    <!-- Content (Scrollable if needed) -->
             <RowDefinition Height="Auto"/> <!-- Buttons -->
         </Grid.RowDefinitions>
 
-        <TextBlock Text="Edit Session" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="White"/>
+        <TextBlock Text="Edit Session" FontSize="24" FontWeight="Bold" Margin="0,0,0,30" Foreground="White"/>
 
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
             <StackPanel>
@@ -40,34 +51,47 @@
                 <ComboBox ItemsSource="{Binding Projects}" 
                           SelectedItem="{Binding SelectedProject}"
                           DisplayMemberPath="Name"
-                          Height="30" Margin="0,0,0,15"/>
+                          Height="40"/>
 
                 <!-- Start Time -->
                 <TextBlock Text="Start Time"/>
-                <Grid Margin="0,0,0,15">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
-                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
-                    <TextBox Grid.ColumnSpan="2" Text="{Binding StartTime, StringFormat='g'}" ToolTip="Format: 'g' (e.g. 6/15/2009 1:45 PM)"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Margin="0,0,10,20" Height="40"/>
+                    <TextBox Grid.Column="1" Text="{Binding StartTimeStr}" ToolTip="HH:mm (e.g. 14:30)" Height="40" VerticalContentAlignment="Center"/>
                 </Grid>
 
                 <!-- End Time -->
                 <TextBlock Text="End Time"/>
-                <TextBox Text="{Binding EndTime, StringFormat='g', TargetNullValue=''}" ToolTip="Leave empty if running"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="120"/>
+                    </Grid.ColumnDefinitions>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding EndDate}" Margin="0,0,10,20" Height="40"/>
+                    <TextBox Grid.Column="1" Text="{Binding EndTimeStr}" ToolTip="HH:mm (e.g. 16:00)" Height="40" VerticalContentAlignment="Center"/>
+                </Grid>
 
                 <!-- Notes -->
                 <TextBlock Text="Notes"/>
-                <TextBox Text="{Binding Notes}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
+                <TextBox Text="{Binding Notes}" Height="120" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Actions -->
-        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-            <Button Content="Cancel" Command="{Binding CancelCommand}" 
-                    Width="80" Height="30" Margin="0,0,10,0" Background="Transparent" Foreground="White" BorderBrush="#555555"/>
-            <Button Content="Save" Command="{Binding SaveCommand}" 
-                    Width="80" Height="30" Background="#007ACC" Foreground="White" BorderThickness="0"/>
+        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,20,0,0">
+             <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,10" 
+                       Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+             
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button Content="Cancel" Command="{Binding CancelCommand}" 
+                        Width="100" Height="40" Margin="0,0,10,0" Background="Transparent" Foreground="White" BorderBrush="#555555" FontSize="14"/>
+                <Button Content="Save" Command="{Binding SaveCommand}" 
+                        Width="100" Height="40" Background="#007ACC" Foreground="White" BorderThickness="0" FontSize="14" FontWeight="SemiBold"/>
+            </StackPanel>
         </StackPanel>
     </Grid>
 </Window>
