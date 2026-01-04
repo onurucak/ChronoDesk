@@ -195,6 +195,9 @@ public class TimerViewModel : ViewModelBase
 
     private async Task StopTimerAsync()
     {
+        // Ensure notes are saved before stopping
+        await UpdateNotesAsync();
+
         await _timerService.StopTimerAsync();
         IsTimerRunning = false;
         _uiTimer.Stop();
@@ -217,6 +220,17 @@ public class TimerViewModel : ViewModelBase
         if (entry.EndTime == null)
         {
             ErrorMessage = "Cannot delete an active session. Please stop the timer first.";
+            return;
+        }
+
+        var result = System.Windows.MessageBox.Show(
+            "Are you sure you want to delete this session?", 
+            "Confirm Delete", 
+            System.Windows.MessageBoxButton.YesNo, 
+            System.Windows.MessageBoxImage.Warning);
+
+        if (result != System.Windows.MessageBoxResult.Yes)
+        {
             return;
         }
 

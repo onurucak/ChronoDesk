@@ -24,48 +24,50 @@
         </Style>
     </Window.Resources>
 
-    <Border Padding="20">
-        <StackPanel>
-            <TextBlock Text="Edit Session" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="White"/>
+    <Grid Margin="20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/> <!-- Title -->
+            <RowDefinition Height="*"/>    <!-- Content (Scrollable if needed) -->
+            <RowDefinition Height="Auto"/> <!-- Buttons -->
+        </Grid.RowDefinitions>
 
-            <!-- Project -->
-            <TextBlock Text="Project"/>
-            <ComboBox ItemsSource="{Binding Projects}" 
-                      SelectedItem="{Binding SelectedProject}"
-                      DisplayMemberPath="Name"
-                      Height="30" Margin="0,0,0,15"/>
+        <TextBlock Text="Edit Session" FontSize="20" FontWeight="Bold" Margin="0,0,0,20" Foreground="White"/>
 
-            <!-- Start Time -->
-            <TextBlock Text="Start Time"/>
-            <!-- Using TextBox for Time editing simplicity since default DatePicker is date only. 
-                 A real app would use Xceed Toolkit or similar for DateTime. 
-                 For now, let's use a Textbox for time representation or two controls. 
-                 Let's stick to a generic Textbox that binds to the DateTime for simplicity, or just separate date/time if I want to be fancy. 
-                 I'll rely on WPF's simple string conversion for now or use a grid with DatePicker + TextBox -->
-             <Grid Margin="0,0,0,15">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                 <!-- Simple approach: Bind directly to text for now, user manually edits "1/4/2026 10:00:00 AM" -->
-                <TextBox Grid.ColumnSpan="2" Text="{Binding StartTime, StringFormat='g'}" ToolTip="Format: 'g' (e.g. 6/15/2009 1:45 PM)"/>
-            </Grid>
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <!-- Project -->
+                <TextBlock Text="Project"/>
+                <ComboBox ItemsSource="{Binding Projects}" 
+                          SelectedItem="{Binding SelectedProject}"
+                          DisplayMemberPath="Name"
+                          Height="30" Margin="0,0,0,15"/>
 
-            <!-- End Time -->
-            <TextBlock Text="End Time"/>
-            <TextBox Text="{Binding EndTime, StringFormat='g', TargetNullValue=''}" ToolTip="Leave empty if running"/>
+                <!-- Start Time -->
+                <TextBlock Text="Start Time"/>
+                <Grid Margin="0,0,0,15">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBox Grid.ColumnSpan="2" Text="{Binding StartTime, StringFormat='g'}" ToolTip="Format: 'g' (e.g. 6/15/2009 1:45 PM)"/>
+                </Grid>
 
-            <!-- Notes -->
-            <TextBlock Text="Notes"/>
-            <TextBox Text="{Binding Notes}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
+                <!-- End Time -->
+                <TextBlock Text="End Time"/>
+                <TextBox Text="{Binding EndTime, StringFormat='g', TargetNullValue=''}" ToolTip="Leave empty if running"/>
 
-            <!-- Actions -->
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
-                <Button Content="Cancel" Command="{Binding CancelCommand}" 
-                        Width="80" Height="30" Margin="0,0,10,0" Background="Transparent" Foreground="White" BorderBrush="#555555"/>
-                <Button Content="Save" Command="{Binding SaveCommand}" 
-                        Width="80" Height="30" Background="#007ACC" Foreground="White" BorderThickness="0"/>
+                <!-- Notes -->
+                <TextBlock Text="Notes"/>
+                <TextBox Text="{Binding Notes}" Height="80" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
             </StackPanel>
+        </ScrollViewer>
+
+        <!-- Actions -->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,10,0,0">
+            <Button Content="Cancel" Command="{Binding CancelCommand}" 
+                    Width="80" Height="30" Margin="0,0,10,0" Background="Transparent" Foreground="White" BorderBrush="#555555"/>
+            <Button Content="Save" Command="{Binding SaveCommand}" 
+                    Width="80" Height="30" Background="#007ACC" Foreground="White" BorderThickness="0"/>
         </StackPanel>
-    </Border>
+    </Grid>
 </Window>
