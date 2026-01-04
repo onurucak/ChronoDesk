@@ -26,16 +26,6 @@ public partial class App : System.Windows.Application
 
     public App()
     {
-        // Single Instance Check
-        _mutex = new Mutex(true, AppGuid, out bool createdNew);
-        if (!createdNew)
-        {
-            // Another instance is already running
-            System.Windows.MessageBox.Show("ChronoDesk is already running.", "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
-            System.Windows.Application.Current.Shutdown();
-            return;
-        }
-
         var services = new ServiceCollection();
         ConfigureServices(services);
         ServiceProvider = services.BuildServiceProvider();
@@ -74,6 +64,16 @@ public partial class App : System.Windows.Application
 
     protected override async void OnStartup(StartupEventArgs e)
     {
+        // Single Instance Check
+        _mutex = new Mutex(true, AppGuid, out bool createdNew);
+        if (!createdNew)
+        {
+            // Another instance is already running
+            System.Windows.MessageBox.Show("ChronoDesk is already running.", "Already Running", MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.Application.Current.Shutdown();
+            return;
+        }
+
         base.OnStartup(e);
 
         // Ensure database is created/migrated

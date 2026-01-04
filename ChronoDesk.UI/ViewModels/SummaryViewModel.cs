@@ -6,13 +6,16 @@ using ChronoDesk.Application.Interfaces;
 using ChronoDesk.Domain.Interfaces;
 using Microsoft.Win32;
 
+using ChronoDesk.UI.Views;
+
 namespace ChronoDesk.UI.ViewModels;
 
 public class SummaryViewModel : ViewModelBase
 {
     private readonly IReportService _reportService;
     private readonly ICsvExportService _csvExportService;
-    private readonly ITimeEntryRepository _timeEntryRepository; // Direct access for export convenience
+    private readonly ITimeEntryRepository _timeEntryRepository;
+    private readonly ChronoDesk.Application.Interfaces.IProjectService _projectService;
 
     private DateTime _startDate = DateTime.Today.AddDays(-7);
     public DateTime StartDate
@@ -69,15 +72,24 @@ public class SummaryViewModel : ViewModelBase
 
     public ICommand RefreshCommand { get; }
     public ICommand ExportCommand { get; }
+    public ICommand DeleteSessionCommand { get; }
+    public ICommand EditSessionCommand { get; }
 
-    public SummaryViewModel(IReportService reportService, ICsvExportService csvExportService, ITimeEntryRepository timeEntryRepository)
+    public SummaryViewModel(
+        IReportService reportService, 
+        ICsvExportService csvExportService, 
+        ITimeEntryRepository timeEntryRepository,
+        ChronoDesk.Application.Interfaces.IProjectService projectService)
     {
         _reportService = reportService;
         _csvExportService = csvExportService;
         _timeEntryRepository = timeEntryRepository;
+        _projectService = projectService;
 
         RefreshCommand = new RelayCommand(async _ => await LoadDataAsync());
         ExportCommand = new RelayCommand(async _ => await ExportCsvAsync());
+        DeleteSessionCommand = new RelayCommand(async parameter => await DeleteSessionAsync(parameter));
+        EditSessionCommand = new RelayCommand(async parameter => await EditSessionAsync(parameter));
 
         _ = LoadDataAsync();
     }
@@ -128,6 +140,51 @@ public class SummaryViewModel : ViewModelBase
         catch (Exception ex)
         {
             ErrorMessage = $"Failed to export data: {ex.Message}";
+        }
+    }
+
+    private async Task DeleteSessionAsync(object? parameter)
+    {
+        if (parameter is not TimeEntryDto entry) return;
+
+        try
+        {
+            await _timeEntryRepository.DeleteAsync(entry.Id);
+            await LoadDataAsync();
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to delete session: {ex.Message}";
+        }
+    }
+
+    private async Task EditSessionAsync(object? parameter)
+    {
+        if (parameter is not TimeEntryDto dto) return;
+
+        try
+        {
+            var entry = await _timeEntryRepository.GetByIdAsync(dto.Id);
+            if (entry == null) return;
+
+            var projects = await _projectService.GetAllProjectsAsync();
+
+            var vm = new EditSessionViewModel(entry, projects);
+            var window = new Views.EditSessionWindow
+            {
+                DataContext = vm,
+                Owner = System.Windows.Application.Current.MainWindow 
+            };
+
+            if (window.ShowDialog() == true)
+            {
+                await _timeEntryRepository.UpdateAsync(entry);
+                await LoadDataAsync();
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to edit session: {ex.Message}";
         }
     }
 }

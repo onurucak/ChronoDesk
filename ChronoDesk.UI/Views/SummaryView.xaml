@@ -174,22 +174,86 @@
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="Auto"/>
-                                        <RowDefinition Height="Auto"/>
-                                    </Grid.RowDefinitions>
-                                    
-                                    <Grid Margin="0,0,0,5">
-                                        <Grid.ColumnDefinitions>
-                                            <ColumnDefinition Width="*"/>
-                                            <ColumnDefinition Width="Auto"/>
-                                        </Grid.ColumnDefinitions>
-                                        <TextBlock Text="{Binding ProjectName}" FontWeight="SemiBold" FontSize="14" Foreground="{StaticResource PrimaryBrush}"/>
-                                        <TextBlock Grid.Column="1" Text="{Binding Duration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Content -->
+                                    <Grid Grid.Column="0">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
+                                        
+                                        <Grid Margin="0,0,0,5">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="*"/>
+                                                <ColumnDefinition Width="Auto"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Text="{Binding ProjectName}" FontWeight="SemiBold" FontSize="14" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <TextBlock Grid.Column="1" Text="{Binding Duration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}"/>
+                                        </Grid>
+                                        
+                                        <TextBlock Grid.Row="1" Text="{Binding Notes}" FontSize="13" Foreground="#DDDDDD" TextWrapping="Wrap" 
+                                                   Visibility="{Binding Notes, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
                                     </Grid>
-                                    
-                                    <TextBlock Grid.Row="1" Text="{Binding Notes}" FontSize="13" Foreground="#DDDDDD" TextWrapping="Wrap" 
-                                               Visibility="{Binding Notes, Converter={StaticResource InverseBooleanToVisibilityConverter}}"/>
+
+                                    <!-- Actions -->
+                                    <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" Margin="10,0,0,0">
+                                        
+                                        <Button Command="{Binding DataContext.EditSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Padding="8,4" Cursor="Hand" ToolTip="Edit Session" Margin="0,0,5,0">
+                                            <TextBlock Text="&#xE70F;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{StaticResource PrimaryBrush}"/>
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Opacity" Value="0.6"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="4">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#33007ACC"/>
+                                                                        <Setter Property="Opacity" Value="1.0"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                        
+                                        <Button Command="{Binding DataContext.DeleteSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Padding="8,4" Cursor="Hand" ToolTip="Delete Session">
+                                            <TextBlock Text="&#xE74D;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="{StaticResource DangerBrush}"/>
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Opacity" Value="0.6"/>
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}" CornerRadius="4">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#33FF5555"/>
+                                                                        <Setter Property="Opacity" Value="1.0"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
                             </DataTemplate>
                         </ListView.ItemTemplate>
