@@ -4,6 +4,8 @@ ChronoDesk is a premium, modern Windows desktop time-tracking application built 
 
 ![ChronoDesk UI](assets/ss.png)
 
+![ChronoDesk UI](assets/ss-summary.png)
+
 ## ✨ Features
 
 *   **Modern Aesthetics**: A high-end dark theme featuring glassmorphism effects, smooth animations (fade/slide), and premium typography.
