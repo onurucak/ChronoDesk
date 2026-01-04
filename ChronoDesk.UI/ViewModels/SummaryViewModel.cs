@@ -95,7 +95,7 @@ public class SummaryViewModel : ViewModelBase
             }
 
             var dailyGroups = entries
-                .GroupBy(t => t.StartTime.Date)
+                .GroupBy(t => t.StartTime.ToLocalTime().Date)
                 .OrderByDescending(g => g.Key)
                 .Select(dayGroup => 
                 {
@@ -111,7 +111,7 @@ public class SummaryViewModel : ViewModelBase
                            // If they have Project navigation prop populated, good.
                            // If not, we use the ProjectService.
                            ProjectName = projGroup.First().Project?.Name ?? "Unknown Project", 
-                           TotalDuration = TimeSpan.FromTicks(projGroup.Sum(t => (t.EndTime ?? DateTime.Now).Ticks - t.StartTime.Ticks))
+                           TotalDuration = TimeSpan.FromTicks(projGroup.Sum(t => (t.EndTime ?? DateTime.UtcNow).Ticks - t.StartTime.Ticks))
                        })
                        .OrderByDescending(p => p.TotalDuration)
                        .ToList();
@@ -119,7 +119,7 @@ public class SummaryViewModel : ViewModelBase
                    return new DailyProjectSummary
                    {
                        Date = dayGroup.Key,
-                       TotalDuration = TimeSpan.FromTicks(dayGroup.Sum(t => (t.EndTime ?? DateTime.Now).Ticks - t.StartTime.Ticks)),
+                       TotalDuration = TimeSpan.FromTicks(dayGroup.Sum(t => (t.EndTime ?? DateTime.UtcNow).Ticks - t.StartTime.Ticks)),
                        Projects = dayProjects
                    };
                 });

@@ -88,7 +88,7 @@
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
                                 <Border Margin="0,0,0,20" BorderBrush="{StaticResource BorderBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,20">
-                                    <StackPanel>
+                                    <StackPanel Margin="20,0">
                                         <!-- Daily Header -->
                                         <Grid Margin="0,0,0,10">
                                             <Grid.ColumnDefinitions>
@@ -115,7 +115,7 @@
                                                             <Ellipse Width="6" Height="6" Fill="{StaticResource SurfaceLightBrush}" VerticalAlignment="Center" Margin="0,0,10,0"/>
                                                             <TextBlock Text="{Binding ProjectName}" FontSize="14" Foreground="{StaticResource TextBrush}" VerticalAlignment="Center"/>
                                                         </StackPanel>
-                                                        <TextBlock Grid.Column="1" Text="{Binding TotalDuration}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
+                                                        <TextBlock Grid.Column="1" Text="{Binding TotalDuration, StringFormat='hh\\:mm\\:ss'}" FontFamily="Consolas" Foreground="{StaticResource TextSecondaryBrush}" VerticalAlignment="Center"/>
                                                     </Grid>
                                                 </DataTemplate>
                                             </ItemsControl.ItemTemplate>

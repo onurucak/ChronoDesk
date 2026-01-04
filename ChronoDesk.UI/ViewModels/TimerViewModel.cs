@@ -143,6 +143,16 @@ public class TimerViewModel : ViewModelBase
              var recents = await _reportService.GetRecentEntriesAsync(20); // Fetch a bit more for the main list
             if (recents != null)
             {
+                // Convert UTC to Local for display
+                foreach (var r in recents)
+                {
+                    r.StartTime = r.StartTime.ToLocalTime();
+                    if (r.EndTime.HasValue)
+                    {
+                        r.EndTime = r.EndTime.Value.ToLocalTime();
+                    }
+                }
+                
                 RecentSessions = new ObservableCollection<TimeEntryDto>(recents.Where(x => x.EndTime != null));
                 OnPropertyChanged(nameof(IsRecentSessionsEmpty));
             }
