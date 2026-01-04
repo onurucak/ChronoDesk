@@ -4,9 +4,9 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="Edit Session" Height="600" Width="500"
+        Title="Edit Session" Height="750" Width="600"
         WindowStartupLocation="CenterOwner"
-        ResizeMode="NoResize"
+        ResizeMode="CanResize"
         WindowStyle="ToolWindow"
         Background="#1E1E1E">
     
@@ -15,6 +15,7 @@
             <Setter Property="Foreground" Value="#DDDDDD"/>
             <Setter Property="Margin" Value="0,0,0,8"/>
             <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontFamily" Value="Segoe UI"/>
         </Style>
         <Style TargetType="TextBox">
             <Setter Property="Padding" Value="8"/>
@@ -22,20 +23,29 @@
             <Setter Property="FontSize" Value="14"/>
             <Setter Property="Background" Value="#252526"/>
             <Setter Property="Foreground" Value="White"/>
-            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderBrush" Value="#3E3E42"/>
+            <Setter Property="BorderThickness" Value="1"/>
         </Style>
         <Style TargetType="DatePicker">
              <Setter Property="Margin" Value="0,0,0,20"/>
              <Setter Property="FontSize" Value="14"/>
+             <Setter Property="Foreground" Value="White"/>
+             <Setter Property="Background" Value="#252526"/>
+             <Setter Property="BorderBrush" Value="#3E3E42"/>
+             <Setter Property="BorderThickness" Value="1"/>
         </Style>
         <Style TargetType="ComboBox">
              <Setter Property="Margin" Value="0,0,0,20"/>
              <Setter Property="FontSize" Value="14"/>
              <Setter Property="Padding" Value="8"/>
+             <Setter Property="Background" Value="#252526"/>
+             <Setter Property="Foreground" Value="White"/>
+             <Setter Property="BorderBrush" Value="#3E3E42"/>
+             <Setter Property="BorderThickness" Value="1"/>
         </Style>
     </Window.Resources>
 
-    <Grid Margin="30">
+    <Grid Margin="40">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/> <!-- Title -->
             <RowDefinition Height="*"/>    <!-- Content (Scrollable if needed) -->
@@ -60,7 +70,7 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Margin="0,0,10,20" Height="40"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding StartDate}" Margin="0,0,15,20" Height="40" Foreground="White" Background="{StaticResource SurfaceBrush}"/>
                     <TextBox Grid.Column="1" Text="{Binding StartTimeStr}" ToolTip="HH:mm (e.g. 14:30)" Height="40" VerticalContentAlignment="Center"/>
                 </Grid>
 
@@ -71,26 +81,26 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="120"/>
                     </Grid.ColumnDefinitions>
-                    <DatePicker Grid.Column="0" SelectedDate="{Binding EndDate}" Margin="0,0,10,20" Height="40"/>
+                    <DatePicker Grid.Column="0" SelectedDate="{Binding EndDate}" Margin="0,0,15,20" Height="40" Foreground="White" Background="{StaticResource SurfaceBrush}"/>
                     <TextBox Grid.Column="1" Text="{Binding EndTimeStr}" ToolTip="HH:mm (e.g. 16:00)" Height="40" VerticalContentAlignment="Center"/>
                 </Grid>
 
                 <!-- Notes -->
                 <TextBlock Text="Notes"/>
-                <TextBox Text="{Binding Notes}" Height="120" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
+                <TextBox Text="{Binding Notes}" Height="150" TextWrapping="Wrap" AcceptsReturn="True" VerticalContentAlignment="Top"/>
             </StackPanel>
         </ScrollViewer>
 
         <!-- Actions -->
-        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,20,0,0">
-             <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,10" 
+        <StackPanel Grid.Row="2" Orientation="Vertical" Margin="0,30,0,0">
+             <TextBlock Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" TextWrapping="Wrap" Margin="0,0,0,15" 
                        Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"/>
              
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
                 <Button Content="Cancel" Command="{Binding CancelCommand}" 
-                        Width="100" Height="40" Margin="0,0,10,0" Background="Transparent" Foreground="White" BorderBrush="#555555" FontSize="14"/>
+                        Width="100" Height="40" Margin="0,0,15,0" Background="Transparent" Foreground="White" BorderBrush="#555555" FontSize="14"/>
                 <Button Content="Save" Command="{Binding SaveCommand}" 
-                        Width="100" Height="40" Background="#007ACC" Foreground="White" BorderThickness="0" FontSize="14" FontWeight="SemiBold"/>
+                        Width="120" Height="40" Background="#007ACC" Foreground="White" BorderThickness="0" FontSize="14" FontWeight="SemiBold"/>
             </StackPanel>
         </StackPanel>
     </Grid>
