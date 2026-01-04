@@ -342,6 +342,15 @@
             </Setter>
         </Style>
 
+        <!-- Calendar Style -->
+        <Style x:Key="CustomCalendarStyle" TargetType="Calendar">
+            <Setter Property="Background" Value="#252526"/>
+            <Setter Property="BorderBrush" Value="{StaticResource BorderBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="SnapsToDevicePixels" Value="True"/>
+        </Style>
+
         <!-- DatePicker Style -->
         <Style TargetType="DatePicker">
             <Setter Property="Foreground" Value="White"/>
@@ -352,6 +361,7 @@
             <Setter Property="BorderThickness" Value="1"/>
             <Setter Property="Padding" Value="2"/>
             <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="CalendarStyle" Value="{StaticResource CustomCalendarStyle}"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="DatePicker">

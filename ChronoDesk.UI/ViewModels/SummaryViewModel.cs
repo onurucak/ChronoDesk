@@ -31,31 +31,18 @@ public class SummaryViewModel : ViewModelBase
         set => SetField(ref _endDate, value);
     }
 
-    private ObservableCollection<ProjectSummaryDto> _projectSummaries = new();
-    public ObservableCollection<ProjectSummaryDto> ProjectSummaries
+    private ObservableCollection<DailyProjectSummary> _projectBreakdown = new();
+    public ObservableCollection<DailyProjectSummary> ProjectBreakdown
     {
-        get => _projectSummaries;
+        get => _projectBreakdown;
         set
         {
-            SetField(ref _projectSummaries, value);
-            OnPropertyChanged(nameof(IsProjectSummariesEmpty));
+            SetField(ref _projectBreakdown, value);
+            OnPropertyChanged(nameof(IsProjectBreakdownEmpty));
         }
     }
 
-    public bool IsProjectSummariesEmpty => ProjectSummaries.Count == 0;
-
-    private ObservableCollection<TimeEntryDto> _recentSessions = new();
-    public ObservableCollection<TimeEntryDto> RecentSessions
-    {
-        get => _recentSessions;
-        set
-        {
-            SetField(ref _recentSessions, value);
-            OnPropertyChanged(nameof(IsRecentSessionsEmpty));
-        }
-    }
-
-    public bool IsRecentSessionsEmpty => RecentSessions.Count == 0;
+    public bool IsProjectBreakdownEmpty => ProjectBreakdown.Count == 0;
 
     private string _errorMessage = string.Empty;
     public string ErrorMessage
@@ -72,8 +59,8 @@ public class SummaryViewModel : ViewModelBase
 
     public ICommand RefreshCommand { get; }
     public ICommand ExportCommand { get; }
-    public ICommand DeleteSessionCommand { get; }
-    public ICommand EditSessionCommand { get; }
+
+    // Removed DeleteSessionCommand, EditSessionCommand as they were for Recent Sessions
 
     public SummaryViewModel(
         IReportService reportService, 
@@ -88,8 +75,6 @@ public class SummaryViewModel : ViewModelBase
 
         RefreshCommand = new RelayCommand(async _ => await LoadDataAsync());
         ExportCommand = new RelayCommand(async _ => await ExportCsvAsync());
-        DeleteSessionCommand = new RelayCommand(async parameter => await DeleteSessionAsync(parameter));
-        EditSessionCommand = new RelayCommand(async parameter => await EditSessionAsync(parameter));
 
         _ = LoadDataAsync();
     }
@@ -99,26 +84,59 @@ public class SummaryViewModel : ViewModelBase
         try
         {
             ErrorMessage = string.Empty;
-            var summaries = await _reportService.GetProjectSummariesAsync(StartDate, EndDate);
-            if (summaries != null)
+            
+            // Fetch all entries for the range
+            var entries = await _timeEntryRepository.FindAsync(t => t.StartTime >= StartDate && t.StartTime <= EndDate);
+            
+            if (entries == null || !entries.Any())
             {
-                ProjectSummaries = new ObservableCollection<ProjectSummaryDto>(summaries);
-            }
-            else
-            {
-                ProjectSummaries = new ObservableCollection<ProjectSummaryDto>();
+                ProjectBreakdown = new ObservableCollection<DailyProjectSummary>();
+                return;
             }
 
-            var recents = await _reportService.GetRecentEntriesAsync(10);
-            if (recents != null)
-            {
-                RecentSessions = new ObservableCollection<TimeEntryDto>(recents);
-            }
+            var dailyGroups = entries
+                .GroupBy(t => t.StartTime.Date)
+                .OrderByDescending(g => g.Key)
+                .Select(dayGroup => 
+                {
+                   var dayProjects = dayGroup
+                       .GroupBy(t => t.ProjectId)
+                       .Select(projGroup => new ProjectSummaryDto
+                       {
+                           // Assuming we can get ProjectName here or need to join. 
+                           // Repository entities might have Project navigation property loaded? 
+                           // If not, we might need to lookup project names. 
+                           // For now assuming Project property is loaded or we use a separate lookup if needed.
+                           // Actually _timeEntryRepository.FindAsync returns entities. 
+                           // If they have Project navigation prop populated, good.
+                           // If not, we use the ProjectService.
+                           ProjectName = projGroup.First().Project?.Name ?? "Unknown Project", 
+                           TotalDuration = TimeSpan.FromTicks(projGroup.Sum(t => (t.EndTime ?? DateTime.Now).Ticks - t.StartTime.Ticks))
+                       })
+                       .OrderByDescending(p => p.TotalDuration)
+                       .ToList();
+
+                   return new DailyProjectSummary
+                   {
+                       Date = dayGroup.Key,
+                       TotalDuration = TimeSpan.FromTicks(dayGroup.Sum(t => (t.EndTime ?? DateTime.Now).Ticks - t.StartTime.Ticks)),
+                       Projects = dayProjects
+                   };
+                });
+
+            ProjectBreakdown = new ObservableCollection<DailyProjectSummary>(dailyGroups);
         }
         catch (Exception ex)
         {
             ErrorMessage = $"Failed to load summary data: {ex.Message}";
         }
+    }
+
+    public class DailyProjectSummary
+    {
+        public DateTime Date { get; set; }
+        public TimeSpan TotalDuration { get; set; }
+        public System.Collections.Generic.List<ProjectSummaryDto> Projects { get; set; } = new();
     }
 
     private async Task ExportCsvAsync()
@@ -146,6 +164,12 @@ public class SummaryViewModel : ViewModelBase
     private async Task DeleteSessionAsync(object? parameter)
     {
         if (parameter is not TimeEntryDto entry) return;
+
+        if (entry.EndTime == null)
+        {
+            ErrorMessage = "Cannot delete an active session. Please stop the timer first.";
+            return;
+        }
 
         try
         {
