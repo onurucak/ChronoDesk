@@ -121,6 +121,15 @@
                 
                 <TextBlock Text="Recent Sessions" Style="{StaticResource H2}" Margin="0,0,0,10" Foreground="{StaticResource TextSecondaryBrush}"/>
 
+                <TextBlock Text="Henüz bir kayıt bulunamadı" 
+                           Grid.Row="1"
+                           HorizontalAlignment="Center" 
+                           VerticalAlignment="Top" 
+                           Margin="0,50,0,0"
+                           Foreground="{StaticResource TextSecondaryBrush}"
+                           FontSize="16"
+                           Visibility="{Binding IsRecentSessionsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+
                 <ListView Grid.Row="1" ItemsSource="{Binding RecentSessions}" BorderThickness="0" Background="Transparent" Margin="0">
                         <ListView.ItemContainerStyle>
                             <Style TargetType="ListViewItem">
