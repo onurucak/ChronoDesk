@@ -5,4 +5,5 @@ namespace ChronoDesk.Application.Interfaces;
 public interface IDataMaintenanceService
 {
     Task ClearAllDataAsync();
+    event EventHandler DataCleared;
 }

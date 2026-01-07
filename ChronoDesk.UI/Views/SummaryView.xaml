@@ -12,7 +12,8 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Grid Margin="0,0,0,30">
+        <!-- Header -->
+        <Grid Grid.Row="0" Margin="0,0,0,20">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -39,7 +40,7 @@
             </StackPanel>
         </Grid>
 
-        <!-- Stats Cards (Simulated) -->
+        <!-- Stats Cards -->
         <Grid Grid.Row="1" Margin="0,0,0,30">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
@@ -53,28 +54,26 @@
                     <TextBlock Text="{Binding ProjectSummaries.Count}" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
-             
-             <!-- Placeholder stats -->
+                
             <Border Grid.Column="1" Style="{StaticResource CardStyle}" Margin="10,0,10,0" Padding="20">
-                 <StackPanel>
+                    <StackPanel>
                     <TextBlock Text="Active Period" Foreground="{StaticResource TextSecondaryBrush}" FontSize="14"/>
                     <TextBlock Text="7 Days" FontSize="32" FontWeight="Bold" Margin="0,10,0,0"/>
                 </StackPanel>
             </Border>
             
             <Border Grid.Column="2" Style="{StaticResource CardStyle}" Margin="10,0,0,0" Padding="20">
-                 <StackPanel>
+                    <StackPanel>
                     <TextBlock Text="Status" Foreground="{StaticResource TextSecondaryBrush}" FontSize="14"/>
                     <TextBlock Text="Productive" FontSize="32" FontWeight="Bold" Margin="0,10,0,0" Foreground="{StaticResource SuccessBrush}"/>
                 </StackPanel>
             </Border>
         </Grid>
 
-        <!-- Project Breakdown & Recent Sessions -->
-        <!-- Project Breakdown -->
-        <Grid Grid.Row="2">
-            <Border Style="{StaticResource CardStyle}" Padding="0">
-                <Grid>
+        <!-- Project Breakdown (Scrollable) -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Padding="0,0,10,0">
+            <Border Style="{StaticResource CardStyle}" Padding="0" Margin="0,0,0,20">
+                <Grid MinHeight="250">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
@@ -97,7 +96,6 @@
                                             </Grid.ColumnDefinitions>
                                             <StackPanel Orientation="Horizontal">
                                                 <TextBlock Text="{Binding Date, StringFormat='ddd, MMM dd'}" FontSize="16" FontWeight="SemiBold" Foreground="White" Margin="0,0,10,0"/>
-                                                <!-- Optional: Add day name explicitly if needed -->
                                             </StackPanel>
                                             <TextBlock Grid.Column="1" Text="{Binding TotalDuration, Converter={StaticResource TimeSpanToDurationConverter}}" FontFamily="Consolas" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource PrimaryBrush}"/>
                                         </Grid>
@@ -129,15 +127,19 @@
                     <!-- Empty State -->
                     <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
                                 Visibility="{Binding IsProjectBreakdownEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
-                         <TextBlock Text="&#xE711;" FontFamily="Segoe MDL2 Assets" FontSize="40" Foreground="{StaticResource BorderBrush}" HorizontalAlignment="Center" Margin="0,0,0,10"/>
-                         <TextBlock Text="No data for selected period" Foreground="{StaticResource TextSecondaryBrush}" FontSize="16"/>
+                            <!-- Icon: 'Library' or 'Collection' looking icon, or 'PieChart' -->
+                            <Border Background="#1AFFFFFF" CornerRadius="50" Width="80" Height="80" Margin="0,0,0,20">
+                            <TextBlock Text="&#xE9F9;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            </Border>
+                            <TextBlock Text="No activity recorded" FontWeight="SemiBold" FontSize="18" Foreground="{StaticResource TextBrush}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                            <TextBlock Text="Start tracking time to see your breakdown here." Foreground="{StaticResource TextSecondaryBrush}" FontSize="14" HorizontalAlignment="Center"/>
                     </StackPanel>
 
                     <TextBlock Grid.Row="1" Text="{Binding ErrorMessage}" Foreground="{StaticResource DangerBrush}" 
-                               Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
-                               HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
+                                Visibility="{Binding HasError, Converter={StaticResource BooleanToVisibilityConverter}}"
+                                HorizontalAlignment="Center" VerticalAlignment="Center" Margin="20"/>
                 </Grid>
             </Border>
-        </Grid>
+        </ScrollViewer>
     </Grid>
 </UserControl>

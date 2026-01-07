@@ -78,6 +78,7 @@ public class ReportService : IReportService
             dtos.Add(new TimeEntryDto
             {
                 Id = item.Id,
+                ProjectId = item.ProjectId,
                 ProjectName = project?.Name ?? "Unknown",
                 StartTime = item.StartTime,
                 EndTime = item.EndTime,

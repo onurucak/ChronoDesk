@@ -14,6 +14,7 @@ public interface IReportService
 public class TimeEntryDto
 {
     public Guid Id { get; set; }
+    public Guid ProjectId { get; set; }
     public string ProjectName { get; set; } = string.Empty;
     public DateTime StartTime { get; set; }
     public DateTime? EndTime { get; set; }

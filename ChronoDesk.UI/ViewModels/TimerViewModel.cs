@@ -89,14 +89,19 @@ public class TimerViewModel : ViewModelBase
     public ICommand UpdateNotesCommand { get; }
     public ICommand DeleteSessionCommand { get; }
     public ICommand EditSessionCommand { get; }
+    public ICommand ResumeSessionCommand { get; }
 
+
+    
+    // Changing constructor to accept IDataMaintenanceService
     public TimerViewModel(
         ITimerService timerService, 
         IProjectService projectService, 
         ProjectStore projectStore, 
         ISettingsService settingsService,
         IReportService reportService,
-        ChronoDesk.Domain.Interfaces.ITimeEntryRepository timeEntryRepository)
+        ChronoDesk.Domain.Interfaces.ITimeEntryRepository timeEntryRepository,
+        IDataMaintenanceService dataMaintenanceService) // Added param
     {
         _timerService = timerService;
         _projectService = projectService;
@@ -110,6 +115,9 @@ public class TimerViewModel : ViewModelBase
         UpdateNotesCommand = new RelayCommand(async _ => await UpdateNotesAsync());
         DeleteSessionCommand = new RelayCommand(async parameter => await DeleteSessionAsync(parameter));
         EditSessionCommand = new RelayCommand(async parameter => await EditSessionAsync(parameter));
+        ResumeSessionCommand = new RelayCommand(async parameter => await ResumeSessionAsync(parameter));
+
+        dataMaintenanceService.DataCleared += OnDataCleared; // Subscribe
 
         _uiTimer = new DispatcherTimer
         {
@@ -118,6 +126,21 @@ public class TimerViewModel : ViewModelBase
         _uiTimer.Tick += UiTimer_Tick;
 
         _ = LoadDataAsync();
+    }
+    
+    private void OnDataCleared(object? sender, EventArgs e)
+    {
+        // Must run on UI thread
+        System.Windows.Application.Current.Dispatcher.Invoke(() => 
+        {
+            RecentSessions.Clear();
+            SelectedProject = null;
+            CurrentNotes = string.Empty;
+            CurrentDuration = "00:00:00";
+            IsTimerRunning = false;
+            _uiTimer.Stop();
+            OnPropertyChanged(nameof(IsRecentSessionsEmpty));
+        });
     }
 
     private async Task LoadDataAsync()
@@ -247,7 +270,13 @@ public class TimerViewModel : ViewModelBase
         try
         {
             await _timeEntryRepository.DeleteAsync(entry.Id);
-            await LoadRecentSessionsAsync();
+            
+            var itemToRemove = RecentSessions.FirstOrDefault(r => r.Id == entry.Id);
+            if (itemToRemove != null)
+            {
+                RecentSessions.Remove(itemToRemove);
+            }
+            OnPropertyChanged(nameof(IsRecentSessionsEmpty));
         }
         catch (Exception ex)
         {
@@ -286,6 +315,40 @@ public class TimerViewModel : ViewModelBase
         catch (Exception ex)
         {
             ErrorMessage = $"Failed to edit session: {ex.Message}";
+        }
+    }
+
+
+    private async Task ResumeSessionAsync(object? parameter)
+    {
+        if (parameter is not TimeEntryDto dto) return;
+
+        try
+        {
+            var project = Projects.FirstOrDefault(p => p.Id == dto.ProjectId);
+            if (project != null)
+            {
+                SelectedProject = project;
+                CurrentNotes = dto.Notes ?? string.Empty; // Handle null notes just in case
+                
+                // If timer is running, stop it first? 
+                // StartTimerAsync doesn't explicitly stop the previous one but the service might handle it or we should.
+                // The logical flow for "Play" is usually: Stop current, Start new.
+                if (IsTimerRunning)
+                {
+                    await StopTimerAsync();
+                }
+
+                await StartTimerAsync();
+            }
+            else
+            {
+                ErrorMessage = "Original project for this session was not found.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Failed to resume session: {ex.Message}";
         }
     }
 }

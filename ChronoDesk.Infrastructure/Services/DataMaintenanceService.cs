@@ -30,5 +30,9 @@ public class DataMaintenanceService : IDataMaintenanceService
         context.Projects.RemoveRange(projects);
 
         await context.SaveChangesAsync();
+        
+        DataCleared?.Invoke(this, EventArgs.Empty);
     }
+
+    public event EventHandler? DataCleared;
 }

@@ -121,14 +121,14 @@
                 
                 <TextBlock Text="Recent Sessions" Style="{StaticResource H2}" Margin="0,0,0,10" Foreground="{StaticResource TextSecondaryBrush}"/>
 
-                <TextBlock Text="Henüz bir kayıt bulunamadı" 
-                           Grid.Row="1"
-                           HorizontalAlignment="Center" 
-                           VerticalAlignment="Top" 
-                           Margin="0,50,0,0"
-                           Foreground="{StaticResource TextSecondaryBrush}"
-                           FontSize="16"
-                           Visibility="{Binding IsRecentSessionsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}"/>
+                <StackPanel Grid.Row="1" VerticalAlignment="Center" HorizontalAlignment="Center" 
+                            Visibility="{Binding IsRecentSessionsEmpty, Converter={StaticResource BooleanToVisibilityConverter}}">
+                     <Border Background="#1AFFFFFF" CornerRadius="50" Width="80" Height="80" Margin="0,0,0,20">
+                        <TextBlock Text="&#xE81C;" FontFamily="Segoe MDL2 Assets" FontSize="32" Foreground="{StaticResource TextSecondaryBrush}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                     </Border>
+                     <TextBlock Text="No recent sessions" FontWeight="SemiBold" FontSize="18" Foreground="{StaticResource TextBrush}" HorizontalAlignment="Center" Margin="0,0,0,5"/>
+                     <TextBlock Text="Your recent activity will appear here." Foreground="{StaticResource TextSecondaryBrush}" FontSize="14" HorizontalAlignment="Center"/>
+                </StackPanel>
 
                 <ListView Grid.Row="1" ItemsSource="{Binding RecentSessions}" BorderThickness="0" Background="Transparent" Margin="0">
                         <ListView.ItemContainerStyle>
@@ -168,11 +168,22 @@
                                     </Grid.ColumnDefinitions>
 
                                     <!-- Description / Notes -->
-                                    <TextBlock Text="{Binding Notes, TargetNullValue='(No description)'}" 
-                                               VerticalAlignment="Center" 
-                                               Foreground="#DDDDDD" 
-                                               TextTrimming="CharacterEllipsis" 
-                                               Margin="0,0,10,0"/>
+                                    <TextBox Text="{Binding Notes, TargetNullValue='(No description)', Mode=OneWay}" 
+                                             VerticalAlignment="Center" 
+                                             Foreground="#DDDDDD" 
+                                             Background="Transparent"
+                                             BorderThickness="0"
+                                             IsReadOnly="True"
+                                             TextWrapping="NoWrap"
+                                             Margin="0,0,10,0">
+                                         <TextBox.Template>
+                                            <ControlTemplate TargetType="TextBox">
+                                                <Grid>
+                                                    <ScrollViewer x:Name="PART_ContentHost"/>
+                                                </Grid>
+                                            </ControlTemplate>
+                                        </TextBox.Template>
+                                    </TextBox>
 
                                     <!-- Project -->
                                     <Border Grid.Column="1" VerticalAlignment="Center" Margin="0,0,20,0">
@@ -204,6 +215,31 @@
                                     <!-- Actions -->
                                     <StackPanel Grid.Column="6" Orientation="Horizontal" VerticalAlignment="Center">
                                         
+                                        <Button Command="{Binding DataContext.ResumeSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
+                                                CommandParameter="{Binding}"
+                                                Background="Transparent" BorderThickness="0" Padding="6" Cursor="Hand" ToolTip="Resume Session" Margin="0,0,8,0">
+                                            <TextBlock Text="&#xE768;" FontFamily="Segoe MDL2 Assets" FontSize="14" Foreground="#AAAAAA"/>
+                                            <Button.Style>
+                                                <Style TargetType="Button">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="Button">
+                                                                <Border Background="{TemplateBinding Background}" CornerRadius="3">
+                                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                                </Border>
+                                                                <ControlTemplate.Triggers>
+                                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                                        <Setter Property="Background" Value="#333"/>
+                                                                        <Setter Property="TextBlock.Foreground" Value="{StaticResource PrimaryBrush}"/>
+                                                                    </Trigger>
+                                                                </ControlTemplate.Triggers>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </Style>
+                                            </Button.Style>
+                                        </Button>
+
                                         <Button Command="{Binding DataContext.EditSessionCommand, RelativeSource={RelativeSource AncestorType=UserControl}}"
                                                 CommandParameter="{Binding}"
                                                 Background="Transparent" BorderThickness="0" Padding="6" Cursor="Hand" ToolTip="Edit Session" Margin="0,0,8,0">
